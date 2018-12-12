@@ -1,12 +1,14 @@
 package com.xuzp.insuredxmltool;
 
 import com.alibaba.excel.ExcelReader;
-import com.alibaba.excel.annotation.ExcelProperty;
-import com.alibaba.excel.metadata.BaseRowModel;
-import com.alibaba.excel.read.context.AnalysisContext;
-import com.alibaba.excel.read.event.AnalysisEventListener;
-import com.xuzp.insuredxmltool.utils.EasyExcelFactory;
-import lombok.Data;
+import com.alibaba.excel.context.AnalysisContext;
+import com.alibaba.excel.event.AnalysisEventListener;
+import com.alibaba.excel.support.ExcelTypeEnum;
+import com.xuzp.insuredxmltool.excel.model.信息;
+import com.xuzp.insuredxmltool.excel.model.险种信息;
+import com.xuzp.insuredxmltool.utils.ReflectTool;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -17,54 +19,54 @@ import java.util.List;
  * @Date 2018/12/11
  * @Time 11:41
  */
+@Slf4j
 public class ExcelLoader {
 
+
     public static void main(String[] args) throws Exception {
-        new ExcelLoader().read("D:/zy_workspace/generali-doc/产品文档/产品列表-真意.xlsx");
+        new ExcelLoader().read("D:/myworkspace/InsuredProductXmlGenerator/src/main/resources/example.xlsx");
     }
 
     public void read(String file) throws Exception {
         try (InputStream in = new FileInputStream(file);) {
-            AnalysisEventListener<List<String>> listener = new AnalysisEventListener<List<String>>() {
 
-                @Override
-                public void invoke(List<String> object, AnalysisContext context) {
-                    System.err.println("Row:" + context.getCurrentRowNum() + " Data:" + object);
-                }
-
-                @Override
-                public void doAfterAllAnalysed(AnalysisContext context) {
-                    System.err.println("doAfterAllAnalysed...");
-                }
-            };
-            ExcelReader excelReader = EasyExcelFactory.getExcelReader(in, null, listener);
-            excelReader.read();
+            解析器 险种信息解析器 = new 解析器(险种信息.class, 0, 1);
+            ExcelTypeEnum excelTypeEnum = file.endsWith(".xlsx") ? ExcelTypeEnum.XLSX: ExcelTypeEnum.XLS;
+            ExcelReader excelReader = new ExcelReader(in, excelTypeEnum, null, 险种信息解析器, true);
+            excelReader.getSheets().stream().filter(x->x.getSheetName().equals(险种信息.class.getSimpleName()))
+                    .findFirst().ifPresent(x->excelReader.read(x));
+            log.info("{}", 险种信息解析器.结果());
         }
     }
 
-    @Data
-    public static class ExcelPropertyIndexModel extends BaseRowModel {
+    class 解析器 <T extends 信息> extends AnalysisEventListener<List<String>> {
 
-        @ExcelProperty(value = "姓名", index = 0)
-        private String name;
+        private T 信息汇总;
+        private int 字段索引;
+        private int 值索引;
 
-        @ExcelProperty(value = "年龄", index = 1)
-        private String age;
+        public 解析器(Class<T> 信息类别, int 字段索引, int 值索引) throws Exception{
+            this.信息汇总 = 信息类别.newInstance();
+            this.字段索引 = 字段索引;
+            this.值索引 = 值索引;
+        }
 
-        @ExcelProperty(value = "邮箱", index = 2)
-        private String email;
+        @Override
+        public void invoke(List<String> lineData, AnalysisContext context) {
+            String 字段 = lineData.get(字段索引);
+            String 值 = lineData.get(值索引);
+            if(StringUtils.isNotEmpty(字段) && StringUtils.isNotEmpty(值)) {
+                ReflectTool.setAttribute(信息汇总, 字段, 值);
+            }
+        }
 
-        @ExcelProperty(value = "地址", index = 3)
-        private String address;
+        @Override
+        public void doAfterAllAnalysed(AnalysisContext context) {
+            System.err.println("爷，解析完成");
+        }
 
-        @ExcelProperty(value = "性别", index = 4)
-        private String sax;
-
-        @ExcelProperty(value = "高度", index = 5)
-        private String heigh;
-
-        @ExcelProperty(value = "备注", index = 6)
-        private String last;
-
-    }
+        public T 结果(){
+            return 信息汇总;
+        }
+    };
 }

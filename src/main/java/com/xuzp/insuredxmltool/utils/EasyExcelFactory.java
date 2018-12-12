@@ -1,8 +1,7 @@
 package com.xuzp.insuredxmltool.utils;
 
 import com.alibaba.excel.ExcelReader;
-import com.alibaba.excel.read.context.AnalysisContext;
-import com.alibaba.excel.read.event.AnalysisEventListener;
+import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import org.apache.poi.EmptyFileException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -21,19 +20,7 @@ import java.io.PushbackInputStream;
  * @Time 18:33
  */
 public class EasyExcelFactory {
-    /**
-     * @param in
-     *           文件输入流
-     * @param customContent
-     *           自定义模型可以在
-     *           {@link AnalysisEventListener#invoke(Object, AnalysisContext) }
-     *           AnalysisContext中获取用于监听者回调使用
-     * @param eventListener
-     *           用户监听
-     * @throws IOException
-     * @throws EmptyFileException
-     * @throws InvalidFormatException
-     */
+
     public static ExcelReader getExcelReader(InputStream in, Object customContent,
                                              AnalysisEventListener<?> eventListener) throws EmptyFileException, IOException, InvalidFormatException {
         // 如果输入流不支持mark/reset，需要对其进行包裹
@@ -57,21 +44,6 @@ public class EasyExcelFactory {
 
     }
 
-    /**
-     * @param in
-     *           文件输入流
-     * @param customContent
-     *           自定义模型可以在
-     *           {@link AnalysisEventListener#invoke(Object, AnalysisContext) }
-     *           AnalysisContext中获取用于监听者回调使用
-     * @param eventListener
-     *           用户监听
-     * @param trim
-     *           是否对解析的String做trim()默认true,用于防止 excel中空格引起的装换报错。
-     * @throws IOException
-     * @throws EmptyFileException
-     * @throws InvalidFormatException
-     */
     public static ExcelReader getExcelReader(InputStream in, Object customContent,
                                              AnalysisEventListener<?> eventListener, boolean trim)
             throws EmptyFileException, IOException, InvalidFormatException {
