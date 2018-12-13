@@ -227,9 +227,8 @@ public class ReflectTool {
             try {
                 field = obj.getClass().getSuperclass().getDeclaredField(attName);
             } catch (Exception e2) {
-                log.warn(obj.getClass().getSuperclass().getName() + "no such field:" + attName);
+                log.debug(obj.getClass().getSuperclass().getName() + " no such field:" + attName);
             }
-
         }
         return field;
 
