@@ -34,13 +34,13 @@ public class 主程序 {
         new 主程序().read("D:/myworkspace/InsuredProductXmlGenerator/src/main/resources/example.xlsx");
     }
 
-    public void read(String file) throws Exception {
-        ExcelTypeEnum Excel版本 = file.endsWith(".xlsx") ? ExcelTypeEnum.XLSX : ExcelTypeEnum.XLS;
+    public void read(String 文件) throws Exception {
+        ExcelTypeEnum Excel版本 = 文件.endsWith(ExcelTypeEnum.XLSX.getValue()) ? ExcelTypeEnum.XLSX : ExcelTypeEnum.XLS;
         for(解析器 解析器: 一组解析器){
-            try (InputStream 文件流 = new FileInputStream(file);) {
-                ExcelReader excelReader = new ExcelReader(文件流, Excel版本, null, 解析器, true);
-                excelReader.getSheets().stream().filter(x -> x.getSheetName().equals(解析器.解析器类型()))
-                        .findFirst().ifPresent(x -> excelReader.read(x));
+            try (InputStream 文件流 = new FileInputStream(文件);) {
+                ExcelReader Excel读取器 = new ExcelReader(文件流, Excel版本, null, 解析器, true);
+                Excel读取器.getSheets().stream().filter(Excel页签 -> Excel页签.getSheetName().equals(解析器.解析器类型()))
+                        .findFirst().ifPresent(Excel页签 -> Excel读取器.read(Excel页签));
             }
         }
     }
