@@ -31,7 +31,7 @@ public class 主程序 {
     };
 
     public static void main(String[] args) throws Exception {
-        new 主程序().read("D:/myworkspace/InsuredProductXmlGenerator/src/main/resources/example.xlsx");
+        new 主程序().read("D:/my_workspace/InsuredProductXmlGenerator/src/main/resources/example.xlsx");
     }
 
     public void read(String 文件) throws Exception {
