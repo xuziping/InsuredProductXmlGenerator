@@ -1,4 +1,4 @@
-package com.xuzp.insuredxmltool;
+package com.xuzp.insuredxmltool.template;
 
 import com.google.common.collect.Lists;
 import com.xuzp.insuredxmltool.constants.TemplateConstant;
@@ -71,13 +71,13 @@ public class 模板 {
                 put("保险类别", "life");
                 put("保险次序", "1000");
                 put("输入类目", "AMOUNT");
-                put("缴费频率列表", new ArrayList<String>(){
+                put("交费方式列表", new ArrayList<String>(){
                     {
                         add("single");
                         add("year");
                     }
                 });
-                put("缴费期间列表", new ArrayList<String>(){
+                put("交费年期列表", new ArrayList<String>(){
                     {
                         add("single");
                         add("term_3");
@@ -87,7 +87,11 @@ public class 模板 {
                         add("term_30");
                     }
                 });
-
+                put("保险期间列表", new ArrayList<String>(){
+                    {
+                        add("to_full");
+                    }
+                });
             }
         }));
     }

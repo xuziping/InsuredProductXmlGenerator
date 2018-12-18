@@ -13,43 +13,72 @@
             sale_end_date=""
             quantity="1"
             input="${输入类目}"
-            premium="try((AMOUNT/UNIT)*DS.RATE[0][0],0)"
+    <#if 输入类目=='PREMIUM'>
+            amount="try(Q*DS.VALUE[0][0],0)"
+    <#elseif 输入类目=='AMOUNT'>
+            premium="try(Q*DS.RATE[0][0],0)"
+    </#if>
             last_modify_date="2017-01-01">
 
         <data>
-            <item parser="dds" value="${内部标识}" />
+            <item parser="dds" value="${内部标识}"/>
         </data>
 
         <param>
-    <#if 缴费频率列表??>
+        <#if 交费方式列表??>
             <pay_freq>
-            <#list 缴费频率列表 as 缴费频率>
-                <item code="${缴费频率}" />
-            </#list>
+                <#list 交费方式列表 as 交费方式>
+                <item code="${交费方式}"/>
+                </#list>
             </pay_freq>
-    </#if>
-    <#if 缴费期间列表??>
+        </#if>
+        <#if 交费年期列表??>
             <pay>
-            <#list 缴费期间列表 as 缴费期间>
-                <item code="${缴费期间}" />
-            </#list>
+                <#list 交费年期列表 as 交费年期>
+                <item code="${交费年期}"/>
+                </#list>
             </pay>
-    </#if>
-    <#if 保障期间列表??>
+        </#if>
+        <#if 保险期间列表??>
             <insure>
-            <#list 保障期间列表 as 保障期间>
-                <item code="${保障期间}" />
-            </#list>
+                <#list 保险期间列表 as 保险期间>
+                <item code="${保险期间}"/>
+                </#list>
             </insure>
-    </#if>
+        </#if>
+
+        <#if 祝寿金领取年龄列表??>
+            <birthday_payment_age>
+                <#list 祝寿金领取年龄列表 as 祝寿金领取年龄>
+                <item code="${祝寿金领取年龄}"/>
+                </#list>
+            </birthday_payment_age>
+        </#if>
         </param>
 
         <input>
-            <item name="PAY_FREQ" label ="交费方式" widget="select">buildOption('pay_freq')</item>
-            <item name="PAY" label ="交费年期" widget="select">buildOption('pay')</item>
+            <#if 缴费方式列表??>
+            <item name="PAY_FREQ" label="交费方式" widget="select">buildOption('pay_freq')</item>
+            </#if>
+            <#if 交费年期列表??>
+            <item name="PAY" label="交费年期" widget="select">buildOption('pay')</item>
+            </#if>
+            <#if 保险期间列表??>
             <item name="INSURE" label="保险期间" widget="select">buildOption('insure')</item>
+            </#if>
+            <#if 输入类目=='PREMIUM'>
+            <item name="PREMIUM" label="首年保费" widget="input"></item>
+            <#elseif 输入类目=='AMOUNT'>
             <item name="AMOUNT" label="基本保险金额" widget="input"></item>
+            </#if>
+            <#if 祝寿金领取年龄列表??>
+            <item name="BIRTHDAY_PAYMENT_AGE" label="祝寿金领取年龄" widget="select">buildOption('birthday_payment_age')</item>
+            </#if>
+            <#if 输入类目=='PREMIUM'>
+            <item name="AMOUNT" label="基本保险金额" widget="label">AMOUNT</item>
+            <#elseif 输入类目=='AMOUNT'>
             <item name="PREMIUM" label="首年保费" widget="label">PREMIUM</item>
+            </#if>
         </input>
 
         <rider>
@@ -57,13 +86,19 @@
         </rider>
 
         <init>
+        <#if 输入类目=='PREMIUM'>
+            <item name="Q" value="PREMIUM/UNIT"/>
+        <#elseif 输入类目=='AMOUNT'>
             <item name="Q" value="AMOUNT/UNIT"/>
+        </#if>
         </init>
 
         <interest>
-            <var name="PRM" param="A1" formula="A1>=PAY_PERIOD?0:PREMIUM" />
-            <var name="PRM_T" param="A1" formula="(A1>0?IT.PRM_T(A1-1):0)+IT.PRM(A1)" />
+            <var name="PRM" param="A1" formula="A1>=PAY_PERIOD?0:PREMIUM" /><!--年交保费-->
+            <var name="PRM_T" param="A1" formula="(A1>0?IT.PRM_T(A1-1):0)+IT.PRM(A1)" /><!--累计保险费-->
+            <var name="AMT" param="A1" formula="A1+1+AGE >= 18?AMOUNT:IT.PRM_T(A1)" /><!--身故保障-->
             <var name="CSV" param="A1" formula="try(Q * (DS.DATA[A1][0]), 0)" /><!--现价-->
+            <var name="SVN" param="A1" formula="PREMIUM*PAY_PERIOD-IT.PRM_T(A1)" /><!--重大疾病或轻症疾病豁免保险费-->
         </interest>
 
         <attachment>
@@ -72,20 +107,24 @@
                     <row type="title">
                         <blank row="1">'保单年度'</blank>
                         <blank row="1">'年龄'</blank>
-                        <blank row="1">'当期保费（元）'</blank>
-                        <blank row="1">'累计保费（元）'</blank>
-                        <blank row="1">'身故或全残保险金（元）'</blank>
+                        <blank row="1">'年交保险费（元）'</blank>
+                        <blank row="1">'累计保险费（元）'</blank>
+                        <blank row="1">'重大疾病保障（元）'</blank>
+                        <blank row="1">'身故保障（元）'</blank>
+                        <blank row="1">'轻症疾病保障（元）'</blank>
                         <blank row="1">'现金价值（元）'</blank>
                         <blank row="1">'日开销（元）'</blank>
                     </row>
-                    <loop from="0" to="INSURE_PERIOD" step="1" name="I">
+                    <loop from="0" to="INSURE_PERIOD-1" step="1" name="I">
                         <row>
                             <blank style="##0">I+1</blank>
                             <blank style="##0">AGE+I+1</blank>
-                            <blank align="right" style="########0">IT.PRM(I)</blank>
-                            <blank align="right" style="########0">IT.PRM_T(I)</blank>
-                            <blank align="right" style="########0">AMOUNT</blank>
-                            <blank align="right" style="########0">IT.CSV(I)</blank>
+                            <blank align="right" style="########0.00">round(IT.PRM(I),2)</blank>
+                            <blank align="right" style="########0.00">round(IT.PRM_T(I),2)</blank>
+                            <blank align="right" style="########0.00">round(AMOUNT)</blank>
+                            <blank align="right" style="########0.00">round(IT.AMT(I),2)</blank>
+                            <blank align="right" style="########0.00">round(AMOUNT*0.2)</blank>
+                            <blank align="right" style="########0.00">round(IT.CSV(I))</blank>
                             <blank align="right" style="########0.00">round(IT.PRM(I)/365,2)</blank>
                         </row>
                     </loop>

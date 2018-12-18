@@ -1,7 +1,6 @@
-package com.xuzp.insuredxmltool;
+package com.xuzp.insuredxmltool.excel.parser;
 
 import com.alibaba.excel.context.AnalysisContext;
-import com.alibaba.excel.event.AnalysisEventListener;
 import com.xuzp.insuredxmltool.excel.model.信息;
 import com.xuzp.insuredxmltool.utils.ReflectTool;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +14,13 @@ import java.util.List;
  * @Time 10:48
  */
 @Slf4j
-public class 解析器 <T extends 信息> extends AnalysisEventListener<List<String>> {
+public class 简单键值解析器<T extends 信息> extends 解析器 {
 
     private T 信息汇总;
     private int 字段索引;
     private int 值索引;
 
-    public 解析器(Class<T> 信息类别, int 字段索引, int 值索引) throws Exception{
+    public 简单键值解析器(Class<T> 信息类别, int 字段索引, int 值索引) throws Exception{
         this.信息汇总 = 信息类别.newInstance();
         this.字段索引 = 字段索引;
         this.值索引 = 值索引;
@@ -41,10 +40,12 @@ public class 解析器 <T extends 信息> extends AnalysisEventListener<List<Str
         log.info("爷，{}解析完成: {}", 信息汇总.getClass().getSimpleName(), 信息汇总);
     }
 
+    @Override
     public T 结果(){
         return 信息汇总;
     }
 
+    @Override
     public String 解析器类型(){
         return 信息汇总.getClass().getSimpleName();
     }
