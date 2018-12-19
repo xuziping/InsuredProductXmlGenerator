@@ -9,6 +9,9 @@ public enum PayPeriodEnum {
 
     趸交("single", "趸交"),
     年交("year", "年交"),
+    季交("season", "季交"),
+    月交("month", "月交"),
+    半年交("half_year", "半年交"),
     ;
 
     private String code;
