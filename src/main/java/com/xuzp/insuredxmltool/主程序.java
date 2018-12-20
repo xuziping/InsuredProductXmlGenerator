@@ -2,7 +2,13 @@ package com.xuzp.insuredxmltool;
 
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.support.ExcelTypeEnum;
+import com.google.common.collect.Lists;
+import com.xuzp.insuredxmltool.constants.ExcelConstant;
 import com.xuzp.insuredxmltool.constants.TemplateConstant;
+import com.xuzp.insuredxmltool.enums.InsureEnum;
+import com.xuzp.insuredxmltool.enums.PayEnum;
+import com.xuzp.insuredxmltool.enums.PayPeriodEnum;
+import com.xuzp.insuredxmltool.enums.RiskTypeEnum;
 import com.xuzp.insuredxmltool.excel.model.投保规则;
 import com.xuzp.insuredxmltool.excel.model.示例1;
 import com.xuzp.insuredxmltool.excel.model.险种信息;
@@ -39,10 +45,12 @@ public class 主程序 {
     };
 
     public static void main(String[] args) throws Exception {
-        new 主程序().read("D:/myworkspace/InsuredProductXmlGenerator/src/main/resources/example.xlsx");
+        String content = new 主程序().read("D:/myworkspace/InsuredProductXmlGenerator/src/main/resources/example.xlsx")
+        .constructTemplate();
+        log.info(content);
     }
 
-    public void read(String 文件) throws Exception {
+    public 主程序 read(String 文件) throws Exception {
         ExcelTypeEnum Excel版本 = 文件.endsWith(ExcelTypeEnum.XLSX.getValue()) ? ExcelTypeEnum.XLSX : ExcelTypeEnum.XLS;
         for(解析器 解析器: 一组解析器){
             try (InputStream 文件流 = new FileInputStream(文件);) {
@@ -51,9 +59,10 @@ public class 主程序 {
                         .findFirst().ifPresent(Excel页签 -> Excel读取器.read(Excel页签));
             }
         }
+        return this;
     }
 
-    public void constructTemplateParams(){
+    public String constructTemplate(){
 
         险种信息 险种信息 = (险种信息)一组解析器.get(0).结果();
         投保规则 投保规则 = (投保规则)一组解析器.get(1).结果();
@@ -67,31 +76,14 @@ public class 主程序 {
                 put("保险名称",险种信息.险种名称);
                 put("保险简称", 险种信息.险种简称);
                 put("计算单位", "等待输入");
-                put("保险类别", 险种信息.产品类别);
+                put("保险类别", 分词.matchOne(险种信息.险种页签, RiskTypeEnum.values()));
                 put("保险次序", "1000");
-                put("输入类目", "AMOUNT");
-                put("交费方式列表", new ArrayList<String>(){
-                    {
-                        add("single");
-                        add("year");
-                    }
-                });
-                put("交费年期列表", new ArrayList<String>(){
-                    {
-                        add("single");
-                        add("term_3");
-                        add("term_5");
-                        add("term_10");
-                        add("term_20");
-                        add("term_30");
-                    }
-                });
-                put("保险期间列表", new ArrayList<String>(){
-                    {
-                        add("to_full");
-                    }
-                });
-            }
-        });
+                put("输入类目", 分词.matchOne(投保规则.保费保额,
+                        Lists.newArrayList(ExcelConstant.投保规则字段.AMOUNT, ExcelConstant.投保规则字段.PREMIUM)));
+                put("交费方式列表", 分词.matchList(投保规则.交费方式, PayPeriodEnum.values()));
+                put("交费年期列表", 分词.matchList(投保规则.交费年期, PayEnum.values()));
+                put("保险期间列表", 分词.matchList(投保规则.保险期间, InsureEnum.values()));
+            }});
+        return content;
     }
 }

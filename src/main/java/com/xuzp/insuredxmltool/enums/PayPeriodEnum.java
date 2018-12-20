@@ -1,30 +1,36 @@
 package com.xuzp.insuredxmltool.enums;
 
+import lombok.Getter;
+
+import java.util.Arrays;
+
 /**
  * @author za-xuzhiping
  * @Date 2018/12/18
  * @Time 17:51
  */
-public enum PayPeriodEnum {
+@Getter
+public enum PayPeriodEnum implements IEnum {
 
-    趸交("single", "趸交"),
-    年交("year", "年交"),
-    季交("season", "季交"),
-    月交("month", "月交"),
-    半年交("half_year", "半年交"),
+    趸交("single", new String[]{"趸交"}),
+    年交("year", new String[]{"年交"}),
+    季交("season", new String[]{"季交"}),
+    月交("month", new String[]{"月交"}),
+    半年交("half_year", new String[]{"半年交"}),
     ;
 
     private String code;
-    private String name;
+    private String[] names;
 
-    PayPeriodEnum(String code, String name){
+    PayPeriodEnum(String code, String[] names){
         this.code = code;
-        this.name = name;
+        this.names = names;
     }
 
-    public String getCode(String name) {
+    @Override
+    public String getCodeByName(String name) {
         for(PayPeriodEnum e : PayPeriodEnum.values()){
-            if(e.name.indexOf(name)!=-1){
+            if(Arrays.stream(e.names).filter(x->x.equals(name)).findAny().isPresent()){
                 return e.code;
             }
         }

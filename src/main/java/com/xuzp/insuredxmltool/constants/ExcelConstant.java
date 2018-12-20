@@ -50,5 +50,11 @@ public interface ExcelConstant {
         String 交费方式 = "交费方式";
         String 交费年期 = "交费年期";
         String 保险期间 = "保险期间";
+
+
+        String AMOUNT = "保额算保费";
+        String PREMIUM = "保费算保额";
     }
+
+
 }
