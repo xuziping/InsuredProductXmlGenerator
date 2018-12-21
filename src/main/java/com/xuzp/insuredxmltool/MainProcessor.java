@@ -12,8 +12,10 @@ import com.xuzp.insuredxmltool.excel.parser.简单键值解析器;
 import com.xuzp.insuredxmltool.excel.parser.解析器;
 import com.xuzp.insuredxmltool.template.模板;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ import java.util.List;
  * @Time 11:41
  */
 @Slf4j
-public class 主程序 {
+public class MainProcessor {
 
     List<解析器> 一组解析器 = new ArrayList<解析器>() {
         {
@@ -41,12 +43,17 @@ public class 主程序 {
     };
 
     public static void main(String[] args) throws Exception {
-        String content = new 主程序().read("D:/myworkspace/InsuredProductXmlGenerator/src/main/resources/example.xlsx")
-        .constructTemplate();
-        log.info(content);
+        if(args==null || args.length!=1){
+            log.error("请指定需求excel路径");
+            return;
+        }
+        MainProcessor processor = new MainProcessor();
+        String content = processor.read(args[0]).constructTemplate();
+        processor.generateFile(args[0], content);
+//        log.info(content);
     }
 
-    public 主程序 read(String 文件) throws Exception {
+    public MainProcessor read(String 文件) throws Exception {
         ExcelTypeEnum Excel版本 = 文件.endsWith(ExcelTypeEnum.XLSX.getValue()) ? ExcelTypeEnum.XLSX : ExcelTypeEnum.XLS;
         for(解析器 解析器: 一组解析器){
             try (InputStream 文件流 = new FileInputStream(文件);) {
@@ -93,5 +100,14 @@ public class 主程序 {
             return defaultVal;
         }
         return val;
+    }
+
+    private void generateFile(String excelFile, String content) throws Exception {
+        险种信息 险种信息 = (险种信息)一组解析器.get(0).结果();
+        String fileName = getVal(险种信息.内部标识)+".xml";
+        File path = new File(excelFile).getParentFile();
+        File outFile = FileUtils.getFile(path, fileName);
+        FileUtils.writeStringToFile(outFile, content, TemplateConstant.ENCODING);
+        log.info("生成{}成功",fileName);
     }
 }

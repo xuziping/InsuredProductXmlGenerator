@@ -71,7 +71,7 @@ public class 示例1解析器 extends 解析器{
 
     @Override
     public void doAfterAllAnalysed(AnalysisContext context) {
-        log.info("爷，示例1解析完成: {}", 信息汇总);
+        log.info("{}解析完成: {}", 信息汇总.getClass().getSimpleName(), 信息汇总);
     }
 
     @Override
