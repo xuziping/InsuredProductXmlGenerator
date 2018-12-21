@@ -8,8 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.TreeMap;
 
 /**
  * @author za-xuzhiping
@@ -37,7 +37,7 @@ public class 示例1解析器 extends 解析器{
 
             责任信息 责任 = new 责任信息();
             责任.保障类别名称 = lineData.get(0);
-            责任.给付原因标准和限额 = new TreeMap<String, String>();
+            责任.给付原因标准和限额 = new LinkedHashMap<String, String>();
             信息汇总.责任列表.add(责任);
         } else if (isContent(lineData)) {
             信息汇总.责任列表.get(信息汇总.责任列表.size()-1).给付原因标准和限额.put(lineData.get(0).trim().replaceAll("\n"," "), lineData.get(1).trim().replaceAll("\n"," "));

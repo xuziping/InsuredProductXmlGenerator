@@ -26,14 +26,12 @@ public class 分词 {
         List<String> words = startIKAnalyzer(line);
         List<String> ret = null;
         for (String w : words) {
-            for(IEnum<T> e: enums) {
-                String code = e.getCodeByName(w);
-                if (StringUtils.isNotEmpty(code)) {
-                    if (ret == null) {
-                        ret = Lists.newArrayList(code);
-                    } else {
-                        ret.add(code);
-                    }
+            String code = enums[0].getCodeByName(w);
+            if (StringUtils.isNotEmpty(code)) {
+                if (ret == null) {
+                    ret = Lists.newArrayList(code);
+                } else {
+                    ret.add(code);
                 }
             }
         }
@@ -86,7 +84,7 @@ public class 分词 {
             while (tokenStream.incrementToken()) {
                 CharTermAttribute charTermAttribute = tokenStream
                         .getAttribute(CharTermAttribute.class);
-                log.info(charTermAttribute.toString());
+//                log.info(charTermAttribute.toString());
                 resultdata.add(charTermAttribute.toString());
             }
         }
@@ -94,7 +92,7 @@ public class 分词 {
     }
 
     public static void main(String[] args) {
-        String word = "G--保额算保费";
+        String word = "保险期间:至60周岁,交费期间:趸交、3年交、5年交、10年交,投保年龄:18-50岁。";
 //        分词.startIKAnalyzer(word);
         log.info("Result: {}", 分词.matchOne(word, Lists.newArrayList("保额算保费")));
     }

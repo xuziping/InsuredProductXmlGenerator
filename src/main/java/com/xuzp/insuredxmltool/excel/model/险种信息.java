@@ -27,4 +27,8 @@ public class 险种信息 implements 信息{
     public String 等待期;
     public String 开售日期;
     public String 停售日期;
+
+    public String 内部标识;
+    public String 公司编码;
+    public String 计算单位;
 }

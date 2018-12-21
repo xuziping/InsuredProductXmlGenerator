@@ -2,8 +2,6 @@ package com.xuzp.insuredxmltool.enums;
 
 import lombok.Getter;
 
-import java.util.Arrays;
-
 /**
  * @author za-xuzhiping
  * @Date 2018/12/20
@@ -12,7 +10,7 @@ import java.util.Arrays;
 @Getter
 public enum PayEnum implements IEnum{
 
-    single("single",new String[]{"一次交清"}),
+    single("single",new String[]{"一次交清", "趸交"}),
     term_1("term_1",new String[]{"1年期", "1年"}),
     term_2("term_2",new String[]{"2年期", "2年"}),
     term_3("term_3",new String[]{"3年期", "3年"}),
@@ -53,8 +51,10 @@ public enum PayEnum implements IEnum{
     @Override
     public String getCodeByName(String name) {
         for(PayEnum e : PayEnum.values()){
-            if(Arrays.stream(e.names).filter(x->x.equals(name)).findAny().isPresent()){
-                return e.code;
+            for(String n: e.names) {
+                if(n.equals(name)) {
+                    return e.code;
+                }
             }
         }
         return "";

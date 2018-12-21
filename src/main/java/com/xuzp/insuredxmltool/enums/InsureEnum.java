@@ -2,8 +2,6 @@ package com.xuzp.insuredxmltool.enums;
 
 import lombok.Getter;
 
-import java.util.Arrays;
-
 /**
  * @author za-xuzhiping
  * @Date 2018/12/20
@@ -66,8 +64,10 @@ public enum InsureEnum implements IEnum{
     @Override
     public String getCodeByName(String name) {
         for(InsureEnum e : InsureEnum.values()){
-            if(Arrays.stream(e.names).filter(x->x.equals(name)).findAny().isPresent()){
-                return e.code;
+            for(String n: e.names) {
+                if(n.equals(name)) {
+                    return e.code;
+                }
             }
         }
         return "";

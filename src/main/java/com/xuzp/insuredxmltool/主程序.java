@@ -2,13 +2,8 @@ package com.xuzp.insuredxmltool;
 
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.support.ExcelTypeEnum;
-import com.google.common.collect.Lists;
-import com.xuzp.insuredxmltool.constants.ExcelConstant;
 import com.xuzp.insuredxmltool.constants.TemplateConstant;
-import com.xuzp.insuredxmltool.enums.InsureEnum;
-import com.xuzp.insuredxmltool.enums.PayEnum;
-import com.xuzp.insuredxmltool.enums.PayPeriodEnum;
-import com.xuzp.insuredxmltool.enums.RiskTypeEnum;
+import com.xuzp.insuredxmltool.enums.*;
 import com.xuzp.insuredxmltool.excel.model.投保规则;
 import com.xuzp.insuredxmltool.excel.model.示例1;
 import com.xuzp.insuredxmltool.excel.model.险种信息;
@@ -17,6 +12,7 @@ import com.xuzp.insuredxmltool.excel.parser.简单键值解析器;
 import com.xuzp.insuredxmltool.excel.parser.解析器;
 import com.xuzp.insuredxmltool.template.模板;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -70,20 +66,32 @@ public class 主程序 {
 
         String content =  模板.loadTemplate(TemplateConstant.SAMPLE_FTL, new HashMap<String, Object>(){
             {
-                put("内部标识", "等待输入");
-                put("公司编码", "等待输入");
-                put("保险编码", 险种信息.险种编码);
-                put("保险名称",险种信息.险种名称);
-                put("保险简称", 险种信息.险种简称);
-                put("计算单位", "等待输入");
-                put("保险类别", 分词.matchOne(险种信息.险种页签, RiskTypeEnum.values()));
+                put("内部标识", getVal(险种信息.内部标识));
+                put("公司编码", getVal(险种信息.公司编码));
+                put("保险编码", getVal(险种信息.险种编码));
+                put("保险名称",getVal(险种信息.险种名称));
+                put("保险简称", getVal(险种信息.险种简称));
+                put("计算单位", getVal(险种信息.计算单位));
+                put("主附险标记", getVal(分词.matchOne(险种信息.主附险标记, MainRiderEnum.values())));
+                put("保险类别", getVal(分词.matchOne(险种信息.险种页签, RiskTypeEnum.values())));
                 put("保险次序", "1000");
-                put("输入类目", 分词.matchOne(投保规则.保费保额,
-                        Lists.newArrayList(ExcelConstant.投保规则字段.AMOUNT, ExcelConstant.投保规则字段.PREMIUM)));
+                put("输入类目", getVal(分词.matchOne(投保规则.保费保额, InputTypeEnum.values())));
                 put("交费方式列表", 分词.matchList(投保规则.交费方式, PayPeriodEnum.values()));
                 put("交费年期列表", 分词.matchList(投保规则.交费年期, PayEnum.values()));
                 put("保险期间列表", 分词.matchList(投保规则.保险期间, InsureEnum.values()));
+                put("责任给付列表", 示例.责任列表);
             }});
         return content;
+    }
+
+    private String getVal(String val){
+        return getVal(val, "等待输入");
+    }
+
+    private String getVal(String val, String defaultVal){
+        if(StringUtils.isEmpty(val)) {
+            return defaultVal;
+        }
+        return val;
     }
 }

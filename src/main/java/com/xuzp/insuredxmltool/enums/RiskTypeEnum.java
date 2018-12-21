@@ -2,8 +2,6 @@ package com.xuzp.insuredxmltool.enums;
 
 import lombok.Getter;
 
-import java.util.Arrays;
-
 /**
  * @author za-xuzhiping
  * @Date 2018/12/20
@@ -35,8 +33,10 @@ public enum RiskTypeEnum implements IEnum{
     @Override
     public String getCodeByName(String name) {
         for(RiskTypeEnum e : RiskTypeEnum.values()){
-            if(Arrays.stream(e.names).filter(x->x.contains(name)).findFirst().isPresent()){
-                return e.code;
+            for(String n: e.names) {
+                if(n.equals(name)) {
+                    return e.code;
+                }
             }
         }
         return "";
