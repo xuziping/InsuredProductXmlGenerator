@@ -23,9 +23,9 @@ public enum InsureEnum implements IEnum{
     month_11("month_11",new String[]{"11个月"}),
     month_12("month_12",new String[]{"12个月"}),
 
-    term_1("term_1",new String[]{"1年期", "1年"}),
-    term_5("term_5",new String[]{"5年期", "5年"}),
-    term_10("term_10",new String[]{"10年期", "10年"}),
+    term_1("term_1",new String[]{"1年期", "1年", "一年期"}),
+    term_5("term_5",new String[]{"5年期", "5年", "五年期"}),
+    term_10("term_10",new String[]{"10年期", "10年", "十年期"}),
     term_15("term_15",new String[]{"15年期", "15年"}),
     term_20("term_20",new String[]{"20年期", "20年"}),
     term_25("term_25",new String[]{"25年期", "25年"}),

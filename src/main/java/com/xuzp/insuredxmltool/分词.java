@@ -5,6 +5,7 @@ import com.xuzp.insuredxmltool.enums.IEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -44,6 +45,20 @@ public class 分词 {
             return ret.get(0);
         }
         return null;
+    }
+
+    public static String matchOneNumber(String line){
+        List<String> words = startIKAnalyzer(line);
+        String ret = null;
+        for (String w : words) {
+            if (NumberUtils.isNumber(w)) {
+                if(ret!=null){
+                    return null;
+                }
+                ret = w;
+            }
+        }
+        return ret;
     }
 
     public static String matchOne(String line, List<String> expectedWords) {
@@ -92,8 +107,8 @@ public class 分词 {
     }
 
     public static void main(String[] args) {
-        String word = "保险期间:至60周岁,交费期间:趸交、3年交、5年交、10年交,投保年龄:18-50岁。";
-//        分词.startIKAnalyzer(word);
-        log.info("Result: {}", 分词.matchOne(word, Lists.newArrayList("保额算保费")));
+        String word = ">=18周岁\n";
+        log.info("{}", 分词.startIKAnalyzer(word));
+//        log.info("Result: {}", 分词.matchOne(word, Lists.newArrayList("保额算保费")));
     }
 }

@@ -2,6 +2,7 @@ package com.xuzp.insuredxmltool;
 
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.support.ExcelTypeEnum;
+import com.google.common.collect.Lists;
 import com.xuzp.insuredxmltool.constants.TemplateConstant;
 import com.xuzp.insuredxmltool.enums.*;
 import com.xuzp.insuredxmltool.excel.model.投保规则;
@@ -87,6 +88,11 @@ public class MainProcessor {
                 put("交费年期列表", 分词.matchList(投保规则.交费年期, PayEnum.values()));
                 put("保险期间列表", 分词.matchList(投保规则.保险期间, InsureEnum.values()));
                 put("责任给付列表", 示例.责任列表);
+                put("限制职业", 分词.matchOne(投保规则.限制职业, Lists.newArrayList("1-4类","1~4类")));
+                put("最小投保人年龄", 分词.matchOneNumber(投保规则.最小投保人年龄));
+                put("最大投保人年龄", 分词.matchOneNumber(投保规则.最大投保人年龄));
+                put("最小被保人年龄", 分词.matchOneNumber(投保规则.最小被保人年龄));
+                put("最大被保人年龄", 分词.matchOneNumber(投保规则.最大被保人年龄));
             }});
         return content;
     }

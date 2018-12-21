@@ -159,6 +159,31 @@
         </attachment>
 
         <rule skip="rule_0002">
+        <#if 最小投保人年龄??>
+            <if condition="APPLICANT.AGE lt ${最小投保人年龄}"  type="customer">
+                投保人未满${最小投保人年龄}岁，不可做为投保人。
+            </if>
+        </#if>
+        <#if 最大投保人年龄??>
+            <if condition="APPLICANT.AGE gt ${最大投保人年龄}"  type="customer">
+                投保人大于${最大投保人年龄}岁，不可做为投保人。
+            </if>
+        </#if>
+        <#if 最小被保人年龄??>
+            <if condition="AGE lt ${最小被保人年龄}" type="customer">
+                被保人未满${最小被保人年龄}岁，不可做为被保人。
+            </if>
+        </#if>
+        <#if 最大被保人年龄??>
+            <if condition="AGE gt ${最大被保人年龄}" type="customer">
+                被保人大于${最大被保人年龄}岁，不可做为被保人。
+            </if>
+        </#if>
+        <#if 限制职业??>
+            <if condition="OCCUPATION_CATEGORY>4 or OCCUPATION_CATEGORY lt 1" type="customer">
+                仅限职业风险等级为1-4级的客户投保。
+            </if>
+        </#if>
         </rule>
     </product>
 </declare>

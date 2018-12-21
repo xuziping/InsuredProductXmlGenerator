@@ -11,10 +11,10 @@ import lombok.Getter;
 public enum PayEnum implements IEnum{
 
     single("single",new String[]{"一次交清", "趸交"}),
-    term_1("term_1",new String[]{"1年期", "1年"}),
-    term_2("term_2",new String[]{"2年期", "2年"}),
-    term_3("term_3",new String[]{"3年期", "3年"}),
-    term_5("term_5",new String[]{"5年期", "5年"}),
+    term_1("term_1",new String[]{"1年期", "1年", "一年期"}),
+    term_2("term_2",new String[]{"2年期", "2年", "两年期"}),
+    term_3("term_3",new String[]{"3年期", "3年", "三年期"}),
+    term_5("term_5",new String[]{"5年期", "5年", "五年期"}),
     term_6("term_6",new String[]{"6年期", "6年"}),
     term_10("term_10",new String[]{"10年期", "10年"}),
     term_15("term_15",new String[]{"15年期", "15年"}),
