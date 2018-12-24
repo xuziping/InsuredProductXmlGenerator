@@ -2,7 +2,7 @@ package com.xuzp.insuredxmltool.excel.parser;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.google.common.collect.Lists;
-import com.xuzp.insuredxmltool.excel.model.示例1;
+import com.xuzp.insuredxmltool.excel.model.责任给付;
 import com.xuzp.insuredxmltool.excel.model.责任信息;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -17,12 +17,12 @@ import java.util.List;
  * @Time 11:40
  */
 @Slf4j
-public class 示例1解析器 extends 解析器{
+public class 责任给付解析器 extends 解析器{
 
-    private 示例1 信息汇总;
+    private 责任给付 信息汇总;
 
-    public 示例1解析器() throws Exception{
-        信息汇总 = new 示例1();
+    public 责任给付解析器() throws Exception{
+        信息汇总 = new 责任给付();
         信息汇总.责任列表 = Lists.newArrayList();
     }
 
@@ -75,12 +75,12 @@ public class 示例1解析器 extends 解析器{
     }
 
     @Override
-    public 示例1 结果(){
+    public 责任给付 结果(){
         return 信息汇总;
     }
 
     @Override
     public String 解析器类型(){
-        return 示例1.class.getSimpleName();
+        return 责任给付.class.getSimpleName();
     }
 }

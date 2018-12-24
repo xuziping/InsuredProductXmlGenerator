@@ -6,11 +6,13 @@ import com.google.common.collect.Lists;
 import com.xuzp.insuredxmltool.constants.TemplateConstant;
 import com.xuzp.insuredxmltool.enums.*;
 import com.xuzp.insuredxmltool.excel.model.投保规则;
-import com.xuzp.insuredxmltool.excel.model.示例1;
+import com.xuzp.insuredxmltool.excel.model.责任免除;
+import com.xuzp.insuredxmltool.excel.model.责任给付;
 import com.xuzp.insuredxmltool.excel.model.险种信息;
-import com.xuzp.insuredxmltool.excel.parser.示例1解析器;
 import com.xuzp.insuredxmltool.excel.parser.简单键值解析器;
 import com.xuzp.insuredxmltool.excel.parser.解析器;
+import com.xuzp.insuredxmltool.excel.parser.责任免除解析器;
+import com.xuzp.insuredxmltool.excel.parser.责任给付解析器;
 import com.xuzp.insuredxmltool.template.模板;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -36,7 +38,8 @@ public class MainProcessor {
             try {
                 add(new 简单键值解析器(险种信息.class, 0, 1));
                 add(new 简单键值解析器(投保规则.class, 1, 2));
-                add(new 示例1解析器());
+                add(new 责任给付解析器());
+                add(new 责任免除解析器());
             } catch (Exception e) {
                 log.error("初始化解析器失败", e);
             }
@@ -70,7 +73,8 @@ public class MainProcessor {
 
         险种信息 险种信息 = (险种信息)一组解析器.get(0).结果();
         投保规则 投保规则 = (投保规则)一组解析器.get(1).结果();
-        示例1 示例 = (示例1)一组解析器.get(2).结果();
+        责任给付 责任给付 = (责任给付)一组解析器.get(2).结果();
+        责任免除 责任免除 = (责任免除)一组解析器.get(3).结果();
 
         String content =  模板.loadTemplate(TemplateConstant.SAMPLE_FTL, new HashMap<String, Object>(){
             {
@@ -87,12 +91,13 @@ public class MainProcessor {
                 put("交费方式列表", 分词.matchList(投保规则.交费方式, PayPeriodEnum.values()));
                 put("交费年期列表", 分词.matchList(投保规则.交费年期, PayEnum.values()));
                 put("保险期间列表", 分词.matchList(投保规则.保险期间, InsureEnum.values()));
-                put("责任给付列表", 示例.责任列表);
+                put("责任给付列表", 责任给付.责任列表);
                 put("限制职业", 分词.matchOne(投保规则.限制职业, Lists.newArrayList("1-4类","1~4类")));
                 put("最小投保人年龄", 分词.matchOneNumber(投保规则.最小投保人年龄));
                 put("最大投保人年龄", 分词.matchOneNumber(投保规则.最大投保人年龄));
                 put("最小被保人年龄", 分词.matchOneNumber(投保规则.最小被保人年龄));
                 put("最大被保人年龄", 分词.matchOneNumber(投保规则.最大被保人年龄));
+                put("责任免除列表", 责任免除.责任免除列表);
             }});
         return content;
     }

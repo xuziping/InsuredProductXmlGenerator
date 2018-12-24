@@ -7,12 +7,12 @@ import java.util.List;
 
 /**
  * @author za-xuzhiping
- * @Date 2018/12/18
- * @Time 11:31
+ * @Date 2018/12/24
+ * @Time 16:35
  */
 @Data
 @ToString
-public class 示例1 implements 信息 {
+public class 责任免除 implements 信息 {
 
-    public List<责任信息> 责任列表;
+    public List<String> 责任免除列表;
 }

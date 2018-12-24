@@ -137,6 +137,7 @@
             </benefit_table>
 
             <#if 责任给付列表??>
+            <!-- 责任给付 -->
             <liability filter="liability" parser="liability">
                 <#list 责任给付列表 as 责任给付>
                 <paragraph title="${责任给付.保障类别名称}">
@@ -156,6 +157,18 @@
             </liability>
             </#if>
 
+            <#if 责任免除列表??>
+            <!-- 责任免除  -->
+            <responsibility filter="table" parser="table">
+                <table>
+                    <#list 责任免除列表 as 责任免除>
+                    <row>
+                        <blank>${责任免除}</blank>
+                    </row>
+                    </#list>
+                </table>
+            </responsibility>
+            </#if>
         </attachment>
 
         <rule skip="rule_0002">

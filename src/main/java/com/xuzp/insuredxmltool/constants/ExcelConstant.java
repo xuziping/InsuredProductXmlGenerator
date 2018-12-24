@@ -14,6 +14,7 @@ public interface ExcelConstant {
         String 险种搭配 = "险种搭配";
         String 利益演示 = "利益演示";
         String 示例1 = "示例1";
+        String 责任给付 = "责任给付";
         String 产品UI图片 = "产品UI图片";
     }
 
