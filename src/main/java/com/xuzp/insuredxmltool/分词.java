@@ -107,7 +107,7 @@ public class 分词 {
     }
 
     public static void main(String[] args) {
-        String word = ">=18周岁\n";
+        String word = "如果保险期间大于1年，则校验：投保人年龄<=75周岁\n";
         log.info("{}", 分词.startIKAnalyzer(word));
 //        log.info("Result: {}", 分词.matchOne(word, Lists.newArrayList("保额算保费")));
     }

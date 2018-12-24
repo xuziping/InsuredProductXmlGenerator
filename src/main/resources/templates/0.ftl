@@ -192,6 +192,26 @@
                 被保人大于${最大被保人年龄}岁，不可做为被保人。
             </if>
         </#if>
+        <#if 最低保额??>
+            <if condition="AMOUNT lt ${最低保额}"  type="customer">
+                保额不可低于${最低保额}元。
+            </if>
+        </#if>
+        <#if 最高保额??>
+            <if condition="AMOUNT gt ${最高保额}"  type="customer">
+                保额不可高于${最高保额}元。
+            </if>
+        </#if>
+        <#if 最低保费??>
+            <if condition="PREMIUM lt ${最低保费}"  type="customer">
+                保费不可低于${最低保费}元。
+            </if>
+        </#if>
+        <#if 最高保费??>
+            <if condition="PREMIUM gt ${最高保费}"  type="customer">
+                保费不可高于${最高保费}元。
+            </if>
+        </#if>
         <#if 限制职业??>
             <if condition="OCCUPATION_CATEGORY>4 or OCCUPATION_CATEGORY lt 1" type="customer">
                 仅限职业风险等级为1-4级的客户投保。
