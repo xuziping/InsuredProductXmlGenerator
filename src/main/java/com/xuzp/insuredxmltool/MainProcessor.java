@@ -91,13 +91,13 @@ public class MainProcessor {
                 put("交费方式列表", 分词.matchList(投保规则.交费方式, PayPeriodEnum.values()));
                 put("交费年期列表", 分词.matchList(投保规则.交费年期, PayEnum.values()));
                 put("保险期间列表", 分词.matchList(投保规则.保险期间, InsureEnum.values()));
-                put("责任给付列表", 责任给付.责任列表);
+                put("责任给付列表", 责任给付!=null ? 责任给付.责任列表:null);
                 put("限制职业", 分词.matchOne(投保规则.限制职业, Lists.newArrayList("1-4类","1~4类")));
                 put("最小投保人年龄", 分词.matchOneNumber(投保规则.最小投保人年龄));
                 put("最大投保人年龄", 分词.matchOneNumber(投保规则.最大投保人年龄));
                 put("最小被保人年龄", 分词.matchOneNumber(投保规则.最小被保人年龄));
                 put("最大被保人年龄", 分词.matchOneNumber(投保规则.最大被保人年龄));
-                put("责任免除列表", 责任免除.责任免除列表);
+                put("责任免除列表", 责任免除!=null ? 责任免除.责任免除列表: null);
             }});
         return content;
     }

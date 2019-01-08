@@ -60,7 +60,7 @@
         </param>
 
         <input>
-            <#if 缴费方式列表??>
+            <#if 交费方式列表??>
             <item name="PAY_FREQ" label="交费方式" widget="select">buildOption('pay_freq')</item>
             </#if>
             <#if 交费年期列表??>
@@ -146,8 +146,8 @@
                         <#assign keys = 责任给付.给付原因标准和限额?keys>
                         <#list keys as key>
                         <row type="title">
-                            <blank>${key}</blank>
-                            <blank>${责任给付.给付原因标准和限额[key]}</blank>
+                            <blank>'${key}'</blank>
+                            <blank>'${责任给付.给付原因标准和限额[key]}'</blank>
                         </row>
                         </#list>
                     </table>
@@ -163,7 +163,7 @@
                 <table>
                     <#list 责任免除列表 as 责任免除>
                     <row>
-                        <blank>${责任免除}</blank>
+                        <blank>'${责任免除}'</blank>
                     </row>
                     </#list>
                 </table>
