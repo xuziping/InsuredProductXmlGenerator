@@ -88,7 +88,7 @@ public class MainProcessor {
                 put("保险类别", getVal(分词.matchOne(险种信息.险种页签, RiskTypeEnum.values())));
                 put("保险次序", "1000");
                 put("输入类目", getVal(分词.matchOne(投保规则.保费保额, InputTypeEnum.values())));
-                put("交费方式列表", 分词.matchList(投保规则.交费方式, PayPeriodEnum.values()));
+                put("交费方式列表", 分词.matchList(投保规则.交费方式!=null?投保规则.交费方式:投保规则.交费频次, PayPeriodEnum.values()));
                 put("交费年期列表", 分词.matchList(投保规则.交费年期, PayEnum.values()));
                 put("保险期间列表", 分词.matchList(投保规则.保险期间, InsureEnum.values()));
                 put("责任给付列表", 责任给付!=null ? 责任给付.责任列表:null);

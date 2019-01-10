@@ -18,7 +18,7 @@
             quantity="1"
             input="${输入类目}"
     <#if 输入类目=='premium'>
-            amount="try(Q*DS.VALUE[0][0],0)"
+            amount="try(Q*DS.RATE[0][0],0)"
     <#elseif 输入类目=='amount'>
             premium="try(Q*DS.RATE[0][0],0)"
     </#if>
@@ -145,7 +145,7 @@
                     <table>
                         <#assign keys = 责任给付.给付原因标准和限额?keys>
                         <#list keys as key>
-                        <row type="title">
+                        <row<#if key_index = 0> type="title"</#if>>
                             <blank>'${key}'</blank>
                             <blank>'${责任给付.给付原因标准和限额[key]}'</blank>
                         </row>

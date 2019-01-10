@@ -24,6 +24,7 @@ public class 投保规则 implements 信息{
     public String 最低保费;
     public String 最高保费;
     public String 交费方式;
+    public String 交费频次; // 等同于“交费方式”
     public String 交费年期;
     public String 保险期间;
 }

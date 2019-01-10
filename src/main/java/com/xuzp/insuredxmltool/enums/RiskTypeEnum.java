@@ -20,6 +20,7 @@ public enum RiskTypeEnum implements IEnum{
     投连("linked", new String[]{"投连", "投连险"}),
     分红("dividend", new String[]{"分红", "分红险"}),
     豁免("exempt", new String[]{"豁免", "豁免险"}),
+    年金("annuity", new String[]{"年金", "养老金"}),
     ;
 
     private String code;
