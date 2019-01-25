@@ -102,7 +102,11 @@
             <var name="PRM" param="A1" formula="A1>=PAY_PERIOD?0:PREMIUM" /><!--年交保费-->
             <var name="PRM_T" param="A1" formula="(A1>0?IT.PRM_T(A1-1):0)+IT.PRM(A1)" /><!--累计保险费-->
             <var name="AMT" param="A1" formula="A1+1+AGE >= 18?AMOUNT:IT.PRM_T(A1)" /><!--身故保障-->
+            <#if 现价表结构=='纵向'>
             <var name="CSV" param="A1" formula="try(Q * (DS.DATA[A1][0]), 0)" /><!--现价-->
+            <#elseif 现价表结构=='横向'>
+            <var name="CSV" param="A1" formula="try(Q * (DS.DATA[0][A1]), 0)" /><!--现价-->
+            </#if>
             <var name="SVN" param="A1" formula="PREMIUM*PAY_PERIOD-IT.PRM_T(A1)" /><!--重大疾病或轻症疾病豁免保险费-->
         </interest>
 

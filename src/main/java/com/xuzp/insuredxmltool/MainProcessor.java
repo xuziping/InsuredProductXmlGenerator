@@ -5,10 +5,7 @@ import com.alibaba.excel.support.ExcelTypeEnum;
 import com.google.common.collect.Lists;
 import com.xuzp.insuredxmltool.constants.TemplateConstant;
 import com.xuzp.insuredxmltool.enums.*;
-import com.xuzp.insuredxmltool.excel.model.投保规则;
-import com.xuzp.insuredxmltool.excel.model.责任免除;
-import com.xuzp.insuredxmltool.excel.model.责任给付;
-import com.xuzp.insuredxmltool.excel.model.险种信息;
+import com.xuzp.insuredxmltool.excel.model.*;
 import com.xuzp.insuredxmltool.excel.parser.简单键值解析器;
 import com.xuzp.insuredxmltool.excel.parser.解析器;
 import com.xuzp.insuredxmltool.excel.parser.责任免除解析器;
@@ -40,6 +37,8 @@ public class MainProcessor {
                 add(new 简单键值解析器(投保规则.class, 1, 2));
                 add(new 责任给付解析器());
                 add(new 责任免除解析器());
+                add(new 简单键值解析器(万能险配置.class,0,2));
+                add(new 简单键值解析器(利益演示.class,0,2));
             } catch (Exception e) {
                 log.error("初始化解析器失败", e);
             }
@@ -75,6 +74,7 @@ public class MainProcessor {
         投保规则 投保规则 = (投保规则)一组解析器.get(1).结果();
         责任给付 责任给付 = (责任给付)一组解析器.get(2).结果();
         责任免除 责任免除 = (责任免除)一组解析器.get(3).结果();
+        利益演示 利益演示 = (利益演示)一组解析器.get(4).结果();
 
         String content =  模板.loadTemplate(TemplateConstant.SAMPLE_FTL, new HashMap<String, Object>(){
             {
@@ -97,7 +97,17 @@ public class MainProcessor {
                 put("最大投保人年龄", 分词.matchOneNumber(投保规则.最大投保人年龄));
                 put("最小被保人年龄", 分词.matchOneNumber(投保规则.最小被保人年龄));
                 put("最大被保人年龄", 分词.matchOneNumber(投保规则.最大被保人年龄));
+                put("现价表结构", 利益演示!=null? 分词.matchOne(利益演示.现价表结构, DataLayoutEnum.values()): null);
                 put("责任免除列表", 责任免除!=null ? 责任免除.责任免除列表: null);
+                put("保单年度", 利益演示!=null ? 利益演示.保单年度:null);
+                put("年龄", 利益演示!=null ? 利益演示.年龄:null);
+                put("年交保险费", 利益演示!=null ? 利益演示.年交保险费:null);
+                put("累计保险费", 利益演示!=null ? 利益演示.累计保险费:null);
+                put("重大疾病保障", 利益演示!=null ? 利益演示.重大疾病保障:null);
+                put("身故保障", 利益演示!=null ? 利益演示.身故保障:null);
+                put("轻症疾病保障", 利益演示!=null ? 利益演示.轻症疾病保障:null);
+                put("现金价值", 利益演示!=null ? 利益演示.现金价值:null);
+
             }});
         return content;
     }
