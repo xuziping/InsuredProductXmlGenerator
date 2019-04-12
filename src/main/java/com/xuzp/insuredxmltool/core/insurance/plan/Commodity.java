@@ -820,6 +820,8 @@ public class Commodity implements Serializable
 	
 	private static double round(double v, int scale)
 	{
-		return ((BigDecimal)BigDecimal.valueOf(v + 0.0000001)).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+//		return ((BigDecimal)BigDecimal.valueOf(v + 0.0000001)).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+		return ((BigDecimal)BigDecimal.valueOf(v)).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+
 	}
 }

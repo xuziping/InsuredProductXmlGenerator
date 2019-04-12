@@ -7,6 +7,8 @@ import com.xuzp.insuredxmltool.core.tool.script.warlock.Reference;
 import com.xuzp.insuredxmltool.core.tool.script.warlock.analyse.Expression;
 import com.xuzp.insuredxmltool.core.tool.script.warlock.analyse.Words;
 
+import java.math.BigDecimal;
+
 public class ArithmeticSubLet implements Code
 {
 	Code l, r;
@@ -24,8 +26,8 @@ public class ArithmeticSubLet implements Code
 		
 		if (left.isDecimal() && right.isDecimal())
 		{
-			Double v = Double.valueOf(left.doubleValue() - right.doubleValue());
-//			BigDecimal v = left.toDecimal().subtract(right.toDecimal());
+//			Double v = Double.valueOf(left.doubleValue() - right.doubleValue());
+			BigDecimal v = left.toDecimal().subtract(right.toDecimal());
 			((Reference)l).let(factors, v);
 
 			return v;

@@ -10,9 +10,11 @@ public class FunctionRound implements Function
 {
 	public Object run(Object[] v, Factors factors)
 	{
-		if (v.length == 1)
-			return Integer.valueOf((int)Math.round(Value.valueOf(v[0]).doubleValue() + 0.0000001f));
-		
+		if (v.length == 1) {
+//			return Integer.valueOf((int)Math.round(Value.valueOf(v[0]).doubleValue+ 0.0000001f));
+			BigDecimal d = BigDecimal.valueOf(Value.valueOf(v[0]).doubleValue());
+			return d;
+		}
 		if (v.length == 2)
 		{
 			int scale = Value.valueOf(v[1]).intValue();

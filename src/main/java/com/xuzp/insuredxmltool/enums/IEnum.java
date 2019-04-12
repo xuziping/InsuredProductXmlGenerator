@@ -7,6 +7,6 @@ package com.xuzp.insuredxmltool.enums;
  */
 public interface IEnum<T>{
     String getCode();
-    String[] getNames();
+//    String[] getNames();
     String getCodeByName(String name);
 }

@@ -292,13 +292,17 @@ public class Value implements Serializable
 	public static double doubleOf(Object v)
 	{
 		if (v instanceof Integer)
-			return ((Integer)v).intValue();
+//			return ((Integer)v).intValue();
+			return decimalOf(v).intValue();
 		else if (v instanceof Float)
-			return ((Float)v).floatValue();
+//			return ((Float)v).floatValue();
+			return decimalOf(v).floatValue();
 		else if (v instanceof Double)
-			return ((Double)v).doubleValue();
+//			return ((Double)v).doubleValue();
+			return decimalOf(v).doubleValue();
 		else if (v instanceof Long)
-			return ((Long)v).longValue();
+//			return ((Long)v).longValue();
+			return decimalOf(v).longValue();
 		else
 			return decimalOf(v).doubleValue();
 	}

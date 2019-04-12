@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<declare>
+	<parameter>
+		<!--
+			code  默认为 string
+			show  默认为 string
+			mode  默认为 formula，代表计算算法，可选值为0(value)，1(value-AGE)，2(value+AGE)，默认值为0
+			value 默认为 formula
+			desc  默认为 formula
+		-->
+		<pay_freq>
+		    <item code="choice" value="100" show="请选择" />
+			<item code="single" value="0" show="一次交清" />
+			<item code="year" value="1" show="年交" />
+			<item code="month" value="2" show="月交" />
+			<item code="season" value="3" show="季交" />
+			<item code="half_year" value="4" show="半年交" />
+			<item code="parent" value="PARENT.pay_freq.VALUE" desc="PARENT.pay_freq.DESC" show="同主险" />
+		</pay_freq>
+
+		<pay>
+		    <item code="choice" value="0" show="请选择" />
+			<item code="single" value="1" show="一次交清" />
+
+			<item code="term_1" value="1" show="1年期" />
+			<item code="term_2" value="2" show="2年期" />
+			<item code="term_3" value="3" show="3年期" />
+			<item code="term_5" value="5" show="5年期" />
+			<item code="term_6" value="6" show="6年期" />
+			<item code="term_10" value="10" show="10年期" />
+			<item code="term_15" value="15" show="15年期" />
+			<item code="term_19" value="19" show="19年期" />
+			<item code="term_20" value="20" show="20年期" />
+			<item code="term_25" value="25" show="25年期" />
+			<item code="term_30" value="30" show="30年期" />
+
+			<item code="to_12" mode="1" value="12" show="交至12岁" />
+			<item code="to_15" mode="1" value="15" show="交至15岁" />
+			<item code="to_18" mode="1" value="18" show="交至18岁" />
+			<item code="to_45" mode="1" value="45" show="交至45岁" />
+			<item code="to_50" mode="1" value="50" show="交至50岁" />
+			<item code="to_55" mode="1" value="55" show="交至55岁" />
+			<item code="to_60" mode="1" value="60" show="交至60岁" />
+			<item code="to_65" mode="1" value="65" show="交至65岁" />
+			<item code="to_70" mode="1" value="70" show="交至70岁" />
+			<item code="to_75" mode="1" value="75" show="交至75岁" />
+			<item code="to_88" mode="1" value="88" show="交至88岁" />
+			<item code="to_105" mode="1" value="105" show="交至105岁" />
+
+
+			<item code="insure" mode="1" value="THIS.INSURE_VALUE" show="至保障" />
+			<item code="none" value="0" show="-" />
+			<item code="input" value="THIS.YEAR" desc="'交'+THIS.YEAR+'年'" show="自定义" />
+			<item code="exempt" value="PARENT.PAY_PERIOD-1" desc="round(PARENT.PAY_PERIOD-1)+'年期'" show="豁免期间" />
+			<item code="draw" mode="1" value="THIS.DRAW_AGE" desc="'交至'+DRAW_AGE+'岁'" show="交至领取" />
+			<item code="parent" mode="PARENT.PAY_MODE" value="PARENT.PAY_VALUE" desc="PARENT.PAY_DESC" show="同主险" />
+		</pay>
+
+
+		<insure>
+		    <item code="choice" value="0" show="请选择" />
+			<item code="month_1" mode="2" value="1" show="1个月" />
+			<item code="month_2" mode="2" value="2" show="2个月" />
+			<item code="month_3" mode="2" value="3" show="3个月" />
+			<item code="month_4" mode="2" value="4" show="4个月" />
+			<item code="month_5" mode="2" value="5" show="5个月" />
+			<item code="month_6" mode="2" value="6" show="6个月" />
+			<item code="month_7" mode="2" value="7" show="7个月" />
+			<item code="month_8" mode="2" value="8" show="8个月" />
+			<item code="month_9" mode="2" value="9" show="9个月" />
+			<item code="month_10" mode="2" value="10" show="10个月" />
+			<item code="month_11" mode="2" value="11" show="11个月" />
+			<item code="month_12" mode="2" value="12" show="12个月" />
+			<item code="term_1" value="1" show="1年期" />
+			<item code="term_5" value="5" show="5年期" />
+			<item code="term_10" value="10" show="10年期" />
+			<item code="term_15" value="15" show="15年期" />
+			<item code="term_20" value="20" show="20年期" />
+			<item code="term_25" value="25" show="25年期" />
+			<item code="term_30" value="30" show="30年期" />
+			<item code="to_14" mode="1" value="14" show="保至14岁" />
+			<item code="to_17" mode="1" value="17" show="保至17岁" />
+			<item code="to_21" mode="1" value="21" show="保至21岁" />
+			<item code="to_25" mode="1" value="25" show="保至25岁" />
+			<item code="to_28" mode="1" value="28" show="保至28岁" />
+			<item code="to_40" mode="1" value="40" show="保至40岁" />
+			<item code="to_45" mode="1" value="45" show="保至45岁" />
+			<item code="to_50" mode="1" value="50" show="保至50岁" />
+			<item code="to_55" mode="1" value="55" show="保至55岁" />
+			<item code="to_60" mode="1" value="60" show="保至60岁" />
+			<item code="to_65" mode="1" value="65" show="保至65岁" />
+			<item code="to_70" mode="1" value="70" show="保至70岁" />
+			<item code="to_75" mode="1" value="75" show="保至75岁" />
+			<item code="to_80" mode="1" value="80" show="保至80岁" />
+			<item code="to_85" mode="1" value="85" show="保至85岁" />
+			<item code="to_88" mode="1" value="88" show="保至88岁" />
+			<item code="to_100" mode="1" value="100" show="保至100岁" />
+			<item code="to_105" mode="1" value="105" show="保至105岁" />
+			<item code="to_full" mode="1" value="106" show="终身" />
+			<item code="full_90" mode="1" value="90" show="终身" />
+			<item code="full_105" mode="1" value="105" show="终身" />
+			<item code="full_106" mode="1" value="106" show="终身" />
+			<item code="full_110" mode="1" value="110" show="终身" />
+
+			<item code="pay" mode="pay.MODE" value="pay.VALUE" desc="pay.DESC" show="同缴费" />
+			<item code="input" value="THIS.YEAR" desc="'保'+THIS.YEAR+'年'" show="自定义" />
+			<item code="parent" mode="PARENT.INSURE_MODE" value="PARENT.INSURE_VALUE" desc="PARENT.INSURE_DESC" show="同主险" />
+			<item code="rank" value="0" desc="IT.RANK_INSURE_DESC" show="按档次" />
+			<item code="exempt" value="PARENT.PAY_PERIOD-1" desc="round(PARENT.PAY_PERIOD-1)+'年期'" show="豁免期间" />
+		</insure>
+		<annuity_reward_age>
+			<item code="55" value="55" show="55岁领取" />
+			<item code="60" value="60" show="60岁领取" />
+			<item code="65" value="65" show="65岁领取" />
+			<item code="70" value="70" show="70岁领取" />
+			<item code="75" value="75" show="75岁领取" />
+		</annuity_reward_age>
+		<annuity_reward_way>
+			<item code="single" value="1" show="一次给付" />
+			<item code="term" value="2" show="分期给付" />
+		</annuity_reward_way>
+		<annuity_reward_period>
+			<item code="term_10" value="10" show="10年期" />
+			<item code="term_15" value="15" show="15年期" />
+			<item code="term_19" value="19" show="19年期" />
+			<item code="term_20" value="20" show="20年期" />
+			<item code="term_25" value="25" show="25年期" />
+			<item code="term_30" value="30" show="30年期" />
+		</annuity_reward_period>
+		<annuity_reward_freq>
+			<item code="year" value="1" show="年交" />
+			<item code="month" value="2" show="月交" />
+		</annuity_reward_freq>
+	</parameter>
+</declare>

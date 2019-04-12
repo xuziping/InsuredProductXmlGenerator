@@ -23,8 +23,8 @@ public class ArithmeticAdd implements Code
 		
 		if (left.isDecimal() && right.isDecimal())
 		{
-//			return left.toDecimal().add(right.toDecimal());
-			return Double.valueOf(left.doubleValue() + right.doubleValue());
+			return left.toDecimal().add(right.toDecimal());
+//			return Double.valueOf(left.doubleValue() + right.doubleValue());
 		}
 		else if (left.isNull())
 		{

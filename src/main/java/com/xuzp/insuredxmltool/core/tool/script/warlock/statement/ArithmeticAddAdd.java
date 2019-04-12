@@ -8,6 +8,8 @@ import com.xuzp.insuredxmltool.core.tool.script.warlock.Reference;
 import com.xuzp.insuredxmltool.core.tool.script.warlock.analyse.Expression;
 import com.xuzp.insuredxmltool.core.tool.script.warlock.analyse.Words;
 
+import java.math.BigDecimal;
+
 public class ArithmeticAddAdd implements Code
 {
 	Code l, r;
@@ -30,12 +32,13 @@ public class ArithmeticAddAdd implements Code
 			Value v = Value.valueOf(l, factors);
 			if (v.isDecimal())
 			{
-				double num = v.doubleValue();
-				((Reference)l).let(factors, Double.valueOf(num + 1));
-				
-//				BigDecimal num = v.toDecimal();
-//				((Reference)l).let(factors, num.add(new BigDecimal(1)));
-				return Double.valueOf(num);
+//				double num = v.doubleValue();
+//				((Reference)l).let(factors, Double.valueOf(num + 1));
+//				return Double.valueOf(num);
+
+				BigDecimal num = v.toDecimal();
+				((Reference)l).let(factors, num.add(new BigDecimal(1)));
+				return Double.valueOf(num.toString());
 			}
 		}
 		else

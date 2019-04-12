@@ -23,8 +23,8 @@ public class ArithmeticMultiply implements Code
 		
 		if (left.isDecimal() && right.isDecimal())
 		{
-//			return left.toDecimal().multiply(right.toDecimal());
-			return Double.valueOf(left.doubleValue() * right.doubleValue());
+			return left.toDecimal().multiply(right.toDecimal());
+//			return Double.valueOf(left.doubleValue() * right.doubleValue());
 		}
 		
 		throw new RuntimeException("只可以对数字做乘法运算 - " + left + " * " + right);

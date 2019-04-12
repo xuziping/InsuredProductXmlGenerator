@@ -27,8 +27,8 @@ public class ArithmeticSub implements Code
 		
 		if (left.isDecimal() && right.isDecimal())
 		{
-//			return left.toDecimal().subtract(right.toDecimal());
-			return Double.valueOf(left.doubleValue() - right.doubleValue());
+			return left.toDecimal().subtract(right.toDecimal());
+//			return Double.valueOf(left.doubleValue() - right.doubleValue());
 		}
 		
 		throw new RuntimeException("只可以对数字做减法运算");

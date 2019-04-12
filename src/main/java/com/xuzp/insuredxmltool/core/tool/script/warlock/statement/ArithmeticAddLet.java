@@ -7,6 +7,7 @@ import com.xuzp.insuredxmltool.core.tool.script.warlock.Reference;
 import com.xuzp.insuredxmltool.core.tool.script.warlock.analyse.Expression;
 import com.xuzp.insuredxmltool.core.tool.script.warlock.analyse.Words;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -27,8 +28,8 @@ public class ArithmeticAddLet implements Code
 		
 		if (left.isDecimal() && right.isDecimal())
 		{
-			Double v = Double.valueOf(left.doubleValue() + right.doubleValue());
-//			BigDecimal v = right.toDecimal().add(left.toDecimal());
+//			Double v = Double.valueOf(left.doubleValue() + right.doubleValue());
+			BigDecimal v = right.toDecimal().add(left.toDecimal());
 			((Reference)l).let(factors, v);
 
 			return v;

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<declare>
+	<function type="product">
+		<!-- 累计保费 -->
+		<item name="PremiumAcc" param="I">
+			case(I>PAY_PERIOD,PAY_PERIOD*PREMIUM,PREMIUM*I)
+		</item>
+		<!-- 判断当前主险在某个年度是否有自动续保的一年期附加险 -->
+		<item name="RiderValid" param="PID,I">
+			HasProduct(PID) and I le RIDER(PID).RENEWAL_AGE - AGE;
+		</item>
+		<!-- 计算自动续保的年期 -->
+		<item name="RENEWAL_PERIOD">
+			RENEWAL_AGE == null ? 1 : (PARENT == null ? RENEWAL_AGE-AGE+1 : min(RENEWAL_AGE-AGE+1, PARENT.PAY_PERIOD));
+		</item>
+	</function>
+</declare>

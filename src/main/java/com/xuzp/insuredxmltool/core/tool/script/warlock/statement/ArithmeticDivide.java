@@ -6,6 +6,8 @@ import com.xuzp.insuredxmltool.core.tool.script.warlock.Code;
 import com.xuzp.insuredxmltool.core.tool.script.warlock.analyse.Expression;
 import com.xuzp.insuredxmltool.core.tool.script.warlock.analyse.Words;
 
+import java.math.MathContext;
+
 public class ArithmeticDivide implements Code
 {
 	Code l, r;
@@ -26,8 +28,8 @@ public class ArithmeticDivide implements Code
 		
 		if (left.isDecimal() && right.isDecimal())
 		{
-//			return left.toDecimal().divide(right.toDecimal(), Script.PRECISE_SCALE, BigDecimal.ROUND_HALF_UP);
-			return Double.valueOf(left.doubleValue() / right.doubleValue());
+			return left.toDecimal().divide(right.toDecimal(), MathContext.DECIMAL64);
+//			return Double.valueOf(left.doubleValue() / right.doubleValue());
 		}
 		
 		throw new RuntimeException("只可以对数字做除法运算");

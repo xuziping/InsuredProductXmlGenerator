@@ -8,6 +8,8 @@ import com.xuzp.insuredxmltool.core.tool.script.warlock.Reference;
 import com.xuzp.insuredxmltool.core.tool.script.warlock.analyse.Expression;
 import com.xuzp.insuredxmltool.core.tool.script.warlock.analyse.Words;
 
+import java.math.BigDecimal;
+
 public class ArithmeticSubSub implements Code
 {
 	Code l, r;
@@ -43,11 +45,11 @@ public class ArithmeticSubSub implements Code
 			Value v = Value.valueOf(r, factors);
 			if (v.isDecimal())
 			{
-				Double num = Double.valueOf(v.doubleValue() - 1);
-				((Reference)r).let(factors, num);
+//				Double num = Double.valueOf(v.doubleValue() - 1);
+//				((Reference)r).let(factors, num);
 	
-	//			BigDecimal num = v.toDecimal().subtract(new BigDecimal(1));
-	//			((Reference)r).let(factors, num);
+				BigDecimal num = v.toDecimal().subtract(new BigDecimal(1));
+				((Reference)r).let(factors, num);
 				return num;
 			}
 		}

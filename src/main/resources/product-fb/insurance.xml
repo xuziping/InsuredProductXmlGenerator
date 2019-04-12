@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<declare>
+	<corporation id="insurance">
+		<!-- 变量公式映射 -->
+		<item src="default/variable.xml"/>
+		
+		<!-- 基础定义，关于缴费、保障、领取 -->
+		<item src="default/parameter.xml"/>
+
+		<!-- 函数定义 -->
+		<item src="default/function.xml"/>
+
+		<!-- 风险保额累计 -->
+		<item src="default/accumulation.xml"/>
+	</corporation>
+
+  <corporation id="cardif" name="cardif" extends="insurance">
+    <item src="cardif/*.xml"/>
+    <item src="cardif/product/*.xml"/>
+  </corporation>
+</declare>

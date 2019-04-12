@@ -11,6 +11,7 @@ import com.xuzp.insuredxmltool.core.tool.formula.Formula;
 import com.xuzp.insuredxmltool.core.tool.formula.Value;
 import com.xuzp.insuredxmltool.core.tool.script.Stack;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -268,7 +269,7 @@ public class TableFilter implements FilterCommodity
 		{
 			Value v = Value.valueOf(cf, p);
 			if (v.isDecimal())
-				return format(v.doubleValue() + supply, style);
+				return format(BigDecimal.valueOf(v.doubleValue() + supply), style);
 			else if (v.isString())
 				return v.toString();
 			else
@@ -276,13 +277,15 @@ public class TableFilter implements FilterCommodity
 		}
 	}
 
-	private static String format(double v, String style)
+	private static String format(BigDecimal v, String style)
 	{
 		if (style == null)
 			return v + "";
 
 		DecimalFormat df = new DecimalFormat(style);
 //		df.setRoundingMode(RoundingMode.HALF_UP);
-		return df.format(v + 0.0000001);
+//		return df.format(v + 0.0000001);
+		return df.format(v.doubleValue());
 	}
+
 }
