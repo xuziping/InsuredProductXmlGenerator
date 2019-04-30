@@ -63,6 +63,11 @@
 		<item name="MEDICARE_CODE" formula="medicare.CODE"/>
 		<item name="MEDICARE_VALUE" formula="medicare.VALUE"/>
 
-
+		<item name="LOAN_AMOUNT_VALUE" formula="loan_amount" />
+		<item name="LOAN_TERM_VALUE" formula="loan_term" />
+		<item name="LOAN_GRACE_PERIOD_VALUE" formula="loan_grace_period"/>
+		<item name="PAY_METHOD_VALUE" formula="pay_method.VALUE" />
+		<item name="CURRENCY_VALUE" formula="currency.VALUE" />
+		<item name="RATE_INFO_VALUE" formula="rate_info" />
 	</variable>
 </declare>

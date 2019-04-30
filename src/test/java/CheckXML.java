@@ -54,17 +54,30 @@ public class CheckXML extends ProductSupport{
         //获取一个产品，添加到计划
         Commodity main;
 
-        main = plan.newCommodity(hq.getProduct("UA0018"));
+        main = plan.newCommodity(hq.getProduct("SITC"));
 //        main.setAdditional("TOTAL_PREMIUM", 10000);
-        main.setPremium(100000);
+        main.setAmount(1000000);
 //        main.setInput("occupation_level", "1");
-        main.setInput("pay_freq", "year");
+        main.setInput("pay_freq", "single");
 
 //        main.setInput("medicare", "no");
 //        main.setInput("insurance", "insurance_50000");
 //        main.setInput("assurance_program", "plan_five");
-        main.setInput("insure", "to_full");
+        main.setInput("insure", "term_20");
         main.setInput("pay", "term_1");
+//        main.setValue("loan_amount", 1000000);
+        main.setInput("loan_grace_period", "3");
+        main.setInput("loan_term", "term_20");
+        main.setInput("pay_method", "loan");
+
+        double[][] array = new double[3][];
+        array[0] = new double[]{1,12,0.018,0.018};
+        array[1] = new double[]{2,24,0.02,0.02};
+        array[2] = new double[]{25,240,0.023,0.023};
+        main.setValue("rate_info",array);
+        main.setValue("loan_amount", 1000000);
+        main.setValue("loan_term", 20);
+        main.setValue("loan_grace_period", 3);
 //        main.setInput("birthday_payment_age", "75");
 //        main.setInput("get_annuity_age", "55");
 

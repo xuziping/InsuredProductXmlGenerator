@@ -34,7 +34,7 @@ public class ArithmeticPointKey implements Code, Reference
 	public Object run(Factors factors)
 	{
 		Object v = l.run(factors);
-		
+
 		if (v == null)
 			throw new RuntimeException("空指针");
 		

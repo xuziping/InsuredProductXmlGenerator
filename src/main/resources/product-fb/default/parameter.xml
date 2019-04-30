@@ -131,5 +131,24 @@
 			<item code="year" value="1" show="年交" />
 			<item code="month" value="2" show="月交" />
 		</annuity_reward_freq>
+		<currency>
+			<item code="TB" value="TB" show="台幣" />
+			<item code="RMB" value="RMB" show="人民幣" />
+		</currency>
+		<pay_method>
+			<item code="cash" value="1" show="現金" />
+			<item code="loan" value="2" show="貸款" />
+		</pay_method>
+		<loan_term>
+			<item code="term_1" value="1" show="1年期" />
+			<item code="term_5" value="5" show="5年期" />
+			<item code="term_10" value="10" show="10年期" />
+			<item code="term_15" value="15" show="15年期" />
+			<item code="term_20" value="20" show="20年期" />
+			<item code="term_25" value="25" show="25年期" />
+			<item code="term_30" value="30" show="30年期" />
+		</loan_term>
+
+
 	</parameter>
 </declare>
