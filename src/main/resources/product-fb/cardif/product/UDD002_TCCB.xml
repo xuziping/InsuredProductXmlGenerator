@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<declare>
+    <product
+            id="UDD002_TCCB"
+            corporation_id="cardif"
+            code="UDD002"
+            name="法國巴黎人壽一年定期重大疾病健康保險附約（甲型）"
+            name_abbr="一年定期重大疾病健康保險附約（甲型）"
+            unit="10000"
+            type_code="thunder"
+            sequence="1000"
+            sale_begin_date="2017-01-01"
+            sale_end_date=""
+            quantity="1"
+            input="amount"
+            premium="PREMIUM_VALUE"
+            is_main="no"
+            is_rider="yes"
+            last_modify_date="2017-01-01">
+
+        <data>
+            <item parser="dds" value="UDD002_TCCB" />
+        </data>
+
+        <param>
+            <pay_freq>
+                <item code="parent" />
+            </pay_freq>
+            <pay>
+                <item code="exempt"/>
+            </pay>
+            <insure>
+                <item code="exempt"/>
+            </insure>
+            <currency>
+                <item code="NTD" />
+            </currency>
+        </param>
+        <param>
+            <pay_freq>
+                <item code="month"/>
+            </pay_freq>
+            <pay>
+                <item code="parent"/>
+            </pay>
+            <insure>
+                <item code="parent"/>
+            </insure>
+        </param>
+
+        <input>
+            <item name="PAY_FREQ" label="繳別" widget="select">buildOption('pay_freq')</item>
+            <item name="CURRENCY" label="保單幣別" widget="select" inputType="proposal">buildOption('currency')</item>
+            <item name="PAY" label="繳費年期" widget="select">buildOption('pay')</item>
+            <item name="INSURE" label="保險期間" widget="select">buildOption('insure')</item>
+            <item name="AMOUNT" label="保險金額" widget="input"></item>
+            <item name="PREMIUM" label="保費" widget="label">PREMIUM</item>
+        </input>
+
+        <init>
+            <item name="proposal_layout" varType="customer" type="string">flow</item><!-- 建议书布局类型 -->
+            <item name="apply_layout" varType="customer" type="string">fixed</item><!-- 要保书布局类型 -->
+            <item name="Q" value="AMOUNT/UNIT"/>
+            <item name="PREMIUM_VALUE" value="try(DS.RATE[0][0],0)" />
+        </init>
+
+        <risk>
+        </risk>
+
+        <interest>
+            <var name="PRM" param="A1" formula="A1 lt INSURE_PERIOD?PREMIUM*12:0" /><!--年交保费-->
+            <var name="PRM_T" param="A1" formula="(A1>0?IT.PRM_T(A1-1):0)+IT.PRM(A1)" /><!--累计保险费-->
+        </interest>
+
+        <attachment>
+           <benefit_table filter="table" parser="table">
+               <table>
+                   <row type="title">
+                       <blank row="1">'保單年度'</blank>
+                       <blank row="1">'年齡'</blank>
+                       <blank row="1">'累積所繳保險費'</blank>
+                   </row>
+                   <loop from="0" to="m" step="1" name="I">
+                       <row>
+                           <blank style="##0">I+1</blank>
+                           <blank style="##0">AGE+I</blank>
+                           <blank align="right" style="########0">IT.PRM_T(I)</blank>
+                       </row>
+                   </loop>
+               </table>
+           </benefit_table>
+
+            <!-- 保障內容 -->
+            <liability filter="liability" parser="liability">
+                <paragraph title="保障金額">
+                    <table>
+                        <row type="title">
+                            <blank>'保障項目'</blank>
+                            <blank>'給付金額（元）'</blank>
+                            <blank>'說明'</blank>
+                        </row>
+                        <row>
+                            <blank>'重大疾病'</blank>
+                            <blank style="##0">AMOUNT</blank>
+                            <blank>'依保險金額給付「重大疾病保險金」'</blank>
+                        </row>
+                    </table>
+                </paragraph>
+            </liability>
+
+            <!-- 欄位及專案說明 -->
+            <tips filter="tip" parser="tip">
+                <paragraph title="註1、">
+                    <table>
+                        <row>
+                            <blank>'本公司每月根據訂立本附約時被保險人的性別、扣款當月（日曆月）最後一個資產評價日主契約之保險年齡及本附約的保險金額計算附約保險成本，並依主契約約定之方式扣除。'</blank>
+                        </row>
+                    </table>
+                </paragraph>
+                <paragraph title="註2、">
+                    <table>
+                        <row>
+                            <blank>'本附約的保險期間為一年，本附約續保時，被保險人之保險費依續保生效當時依規定陳報主管機關之費率及被保險人年齡重新計算保險費，最高可續保年齡為被保險人保險年齡達75歲或年金累積期間屆滿為止較早者。本附約於主契約撤銷或終止時，其效力亦隨同撤銷或終止。'</blank>
+                        </row>
+                    </table>
+                </paragraph>
+                <paragraph title="註3、">
+                    <table>
+                        <row>
+                            <blank>'本附約的保險成本自投資型主契約之保單帳戶價值中扣除，當保單帳戶價值不足以支付相關費用時，保單可能會面臨停效風險。'</blank>
+                        </row>
+                    </table>
+                </paragraph>
+                <paragraph title="註4、">
+                    <table>
+                        <row>
+                            <blank>'本附約的疾病等待期為30日，但發生之疾病為「癌症（重度）」者，則為九十日。'</blank>
+                        </row>
+                    </table>
+                </paragraph>
+                <paragraph title="※" content="詳細重大疾病附約內容請參閱本商品之保單條款。">
+                </paragraph>
+            </tips>
+        </attachment>
+
+        <rule skip="">
+            <!--<if condition="AGE ge 61 and AGE le 70 and " type="customer">-->
+                <!--投保年龄：被保险人出生满28天至65周岁。-->
+            <!--</if>-->
+        </rule>
+    </product>
+</declare>

@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<declare>
+    <product
+            id="HF000006"
+            corporation_id="cardif"
+            code="HF000006"
+            name="汇丰汇财宝年金保险（投资连结型）"
+            name_abbr="汇丰汇财宝年金保险"
+            unit="1000"
+            type_code="linked"
+            sequence="1000"
+            maxSellAge="65"
+            minSellAge="18"
+            sale_begin_date="2015-01-01"
+            sale_end_date=""
+            input="premium"
+            premium_fy="IT.PRM_1(0)"
+            amount="-1"
+            last_modify_date="2015-01-01">
+        <data>
+        </data>
+
+        <param>
+
+            <!-- 交费方式 -->
+            <pay_freq label="交费方式">
+                <item code="single" default="yes" enshow="Single Pay"/>
+            </pay_freq>
+
+            <!-- 交费期限 -->
+            <pay label="交费年期">
+                <item code="single" default="yes" show="趸交" enshow="Single Pay"/>
+            </pay>
+
+            <!-- 保障期限 -->
+            <insure label="保障期限">
+                <item code="full_99" default="yes" enshow="Whole life"/>
+            </insure>
+
+            <is_draw label="年金领取">
+                <item code="1" default="yes"/>
+                <item code="0" />
+            </is_draw>
+            <draw_age label="年金领取年龄">
+                <item code="after_6" default="yes"/>
+            </draw_age>
+
+            <draw label="年金领取期间">
+                <item code="to_term_105"  show="至保单责任终止" enshow="Till policy termination"/>
+            </draw>
+
+        </param>
+
+        <init>
+            <item name="REAL_DRAW_GAE" value="AGE+6"/>
+
+            <item name="SHOW_RATE" value="[0.01,0.045,0.07]"/>
+        </init>
+
+        <interest>
+
+            <!--正常保费-->
+            <var name="PRM" param="A1" formula="A1>=PAY_PERIOD?0:PREMIUM" />
+
+            <!--当年追加保费-->
+            <var name="ADD_PRM" param="A1" >
+                var currentAge = A1+AGE;
+                var currentPremium = 0;
+                for (var x = 0; x lt size(ADD_PREMIUM); x++) {
+                    var addStartAge = ADD_PREMIUM[x].addStartAge;
+                    var addEndAge = ADD_PREMIUM[x].addEndAge;
+                    var addMethod =  ADD_PREMIUM[x].addMethod;
+                    var addPremium = addMethod=="2"?ADD_PREMIUM[x].addPremium*12:ADD_PREMIUM[x].addPremium;
+                    if(currentAge ge addStartAge and  currentAge lt addEndAge) {
+                         currentPremium = currentPremium+addPremium;
+                    }
+                }
+                return currentPremium;
+            </var>
+
+
+            <!--部分金额-->
+            <var name="EXTRA_DRAW"  param="A1" >
+                var currentAge = A1+AGE;
+                var currentAmount = 0;
+                for (var x = 0; x lt size(ADD_DRAW); x++) {
+                    var addStartAge = ADD_DRAW[x].addStartAge;
+                    var addEndAge = ADD_DRAW[x].addEndAge;
+                    var addMethod =  ADD_DRAW[x].addMethod;
+                    var addAmount = ADD_DRAW[x].addAmount;
+                    if(currentAge ge addStartAge and  currentAge lt addEndAge) {
+                        currentAmount = currentAmount+addAmount;
+                    }
+                }
+                return min(IT.PRM_T(A1)*0.2,currentAmount);
+            </var>
+
+            <!--当年保费-->
+            <var name="PRM_1" param="A1" formula="try(IT.PRM(A1)+IT.ADD_PRM(A1),PREMIUM)"/>
+
+            <!--累计总保费-->
+            <var name="PRM_T" param="A1" formula="(A1>0?IT.PRM_T(A1-1):0)+IT.PRM_1(A1)" />
+
+
+            <!--初始费用-->
+            <var name="INIT_PAY" param="A1" formula="IT.PRM_1(A1)*0.01" />
+
+            <!--进入账户投资价值-->
+            <var name="INVEST" param="A1" formula="IT.PRM_1(A1)-IT.INIT_PAY(A1)" />
+
+
+            <!--部分领取金额比例-->
+            <var name="EXTRA_DRAW_RATE"  param="A1" formula="A1 lt 6?(0.05-0.01*A1):0" />
+
+            <!--退保费用率-->
+            <var name="CV_RATE"  param="A1" formula="A1 lt 6?(0.05-0.01*A1):0" />
+
+            <!--个人账户价值-->
+            <var name="ACCOUNT_VALUE" param="A1,A2" >
+                if(A1==0) {
+                    return (IT.INVEST(0)-IT.EXTRA_DRAW(A1)*(1+IT.EXTRA_DRAW_RATE(A1)))*(1+SHOW_RATE[A2]);
+                } else {
+
+                    return (IT.ACCOUNT_VALUE(A1-1,A2)-IT.NJ(A1,A2)-IT.EXTRA_DRAW(A1)*(1+IT.EXTRA_DRAW_RATE(A1)))*(1+SHOW_RATE[A2]);
+                }
+
+            </var>
+
+            <!--年金-->
+            <var name="NJ" param="A1,A2"  formula="A1+1>6?min(IT.PRM_T(A1)*0.2,IT.ACCOUNT_VALUE(A1-1,A2)*0.05):0"/>
+
+            <!--现金价值-->
+            <var name="CV" param="A1,A2"  formula="IT.ACCOUNT_VALUE(A1,A2)*(1-IT.CV_RATE(A1))"/>
+
+
+            <!--身故全残金-->
+            <var name="QC" param="A1,A2"  formula="A1+1>5?0:IT.ACCOUNT_VALUE(A1,A2)*0.1"/>
+
+
+
+            <!--追加保费规则校验-->
+            <var name="ADD_PRM_RULE"  param="">
+                var allow = 1;
+                for (var x = 0; x lt size(ADD_PREMIUM); x++) {
+                    var addPremium = ADD_PREMIUM[x].addPremium;
+                    if(addPremium lt 5000) {
+                        allow =  0;
+                    }
+                }
+                return allow;
+            </var>
+
+            <!--追加领取规则校验1-->
+            <var name="ADD_DRAW_RULE_1" param="" >
+                var allow = 1;
+                for (var x = 0; x lt INSURE_PERIOD-1; x++) {
+                    if(IT.EXTRA_DRAW(x) gt IT.PRM_T(x)*0.2 or IT.EXTRA_DRAW(x) lt 5000){
+                        allow =  0;
+                    }
+                }
+                return allow;
+            </var>
+
+            <!--追加领取规则校验2-->
+            <var name="ADD_DRAW_RULE_2" param="" >
+                var allow = 1;
+                for (var x = 0; x lt INSURE_PERIOD; x++) {
+                    if(IT.ACCOUNT_VALUE(I,0) lt 5000){
+                        allow =  0;
+                    }
+                }
+                return allow;
+            </var>
+
+        </interest>
+
+        <attachment>
+            <!--利益表一-->
+            <benefit_table1 filter="table" parser="table">
+                <table desc="低档">
+                    <row type="title">
+                        <blank row="1">'保单年度'</blank>
+                        <blank row="1">'年龄（保单年度初）'</blank>
+
+                        <blank row="1">'趸交保险费'</blank>
+                        <blank row="1">'追加保险费'</blank>
+                        <blank row="1">'累计保险费'</blank>
+                        <blank row="1">'初始费用'</blank>
+                        <blank row="1">'进入投资账户的价值'</blank>
+
+                        <blank row="1">'保单管理费'</blank>
+                        <blank row="1">'风险保费'</blank>
+
+                        <blank row="1">'年金'</blank>
+                        <blank row="1">'部分领取金额'</blank>
+                        <blank row="1">'个人账户价值'</blank>
+                        <blank row="1">'现金价值'</blank>
+                        <blank row="1">'身故保险金'</blank>
+                        <blank row="1">'全残保险金'</blank>
+                    </row>
+
+                    <loop from="0" to="INSURE_PERIOD-1" step="1" name="I">
+                        <row>
+                            <blank style="##0">I+1</blank>
+                            <blank style="##0">AGE+I</blank>
+
+                            <blank align="right" style="#,###" >round(IT.PRM(I),0)</blank>
+                            <blank align="right" style="#,###">round(IT.ADD_PRM(I),0)</blank>
+                            <blank align="right" style="#,###">round(IT.PRM_T(I))</blank>
+                            <blank align="right" style="#,###">round(IT.INIT_PAY(I),0)</blank>
+                            <blank align="right" style="#,###">round(IT.INVEST(I),0)</blank>
+
+                            <blank align="right" style="#,###">0</blank>
+                            <blank align="right" style="#,###">0</blank>
+
+                            <blank align="right" style="#,###">round(IT.NJ(I,0),0)</blank>
+                            <blank align="right" style="#,###">round(IT.EXTRA_DRAW(I),0)</blank>
+                            <blank align="right" style="#,###">round(IT.ACCOUNT_VALUE(I,0),0)</blank>
+                            <blank align="right" style="#,###">round(IT.CV(I,0),0)</blank>
+                            <blank align="right" style="#,###">round(IT.ACCOUNT_VALUE(I,0),0)</blank>
+                            <blank align="right" style="#,###">round(IT.QC(I,0),0)</blank>
+                        </row>
+                    </loop>
+                </table>
+
+                <table desc="中档">
+                    <row type="title">
+                        <blank row="1">'保单年度'</blank>
+                        <blank row="1">'年龄（保单年度初）'</blank>
+
+                        <blank row="1">'趸交保险费'</blank>
+                        <blank row="1">'追加保险费'</blank>
+                        <blank row="1">'累计保险费'</blank>
+                        <blank row="1">'初始费用'</blank>
+                        <blank row="1">'进入投资账户的价值'</blank>
+
+                        <blank row="1">'保单管理费'</blank>
+                        <blank row="1">'风险保费'</blank>
+
+                        <blank row="1">'年金'</blank>
+                        <blank row="1">'部分领取金额'</blank>
+                        <blank row="1">'个人账户价值'</blank>
+                        <blank row="1">'现金价值'</blank>
+                        <blank row="1">'身故保险金'</blank>
+                        <blank row="1">'全残保险金'</blank>
+                    </row>
+
+                    <loop from="0" to="INSURE_PERIOD-1" step="1" name="I">
+                        <row>
+                            <blank style="##0">I+1</blank>
+                            <blank style="##0">AGE+I</blank>
+
+                            <blank align="right" style="#,###" >round(IT.PRM(I),0)</blank>
+                            <blank align="right" style="#,###">round(IT.ADD_PRM(I),0)</blank>
+                            <blank align="right" style="#,###">round(IT.PRM_T(I))</blank>
+                            <blank align="right" style="#,###">round(IT.INIT_PAY(I),0)</blank>
+                            <blank align="right" style="#,###">round(IT.INVEST(I),0)</blank>
+
+                            <blank align="right" style="#,###">0</blank>
+                            <blank align="right" style="#,###">0</blank>
+
+                            <blank align="right" style="#,###">round(IT.NJ(I,1),0)</blank>
+                            <blank align="right" style="#,###">round(IT.EXTRA_DRAW(I),0)</blank>
+                            <blank align="right" style="#,###">round(IT.ACCOUNT_VALUE(I,1),0)</blank>
+                            <blank align="right" style="#,###">round(IT.CV(I,1),0)</blank>
+                            <blank align="right" style="#,###">round(IT.ACCOUNT_VALUE(I,1),0)</blank>
+                            <blank align="right" style="#,###">round(IT.QC(I,1),0)</blank>
+                        </row>
+                    </loop>
+                </table>
+
+                <table desc="高档">
+                    <row type="title">
+                        <blank row="1">'保单年度'</blank>
+                        <blank row="1">'年龄（保单年度初）'</blank>
+
+                        <blank row="1">'趸交保险费'</blank>
+                        <blank row="1">'追加保险费'</blank>
+                        <blank row="1">'累计保险费'</blank>
+                        <blank row="1">'初始费用'</blank>
+                        <blank row="1">'进入投资账户的价值'</blank>
+
+                        <blank row="1">'保单管理费'</blank>
+                        <blank row="1">'风险保费'</blank>
+
+                        <blank row="1">'年金'</blank>
+                        <blank row="1">'部分领取金额'</blank>
+                        <blank row="1">'个人账户价值'</blank>
+                        <blank row="1">'现金价值'</blank>
+                        <blank row="1">'身故保险金'</blank>
+                        <blank row="1">'全残保险金'</blank>
+                    </row>
+
+                    <loop from="0" to="INSURE_PERIOD-1" step="1" name="I">
+                        <row>
+                            <blank style="##0">I+1</blank>
+                            <blank style="##0">AGE+I</blank>
+
+                            <blank align="right" style="#,###" >round(IT.PRM(I),0)</blank>
+                            <blank align="right" style="#,###">round(IT.ADD_PRM(I),0)</blank>
+                            <blank align="right" style="#,###">round(IT.PRM_T(I))</blank>
+                            <blank align="right" style="#,###">round(IT.INIT_PAY(I),0)</blank>
+                            <blank align="right" style="#,###">round(IT.INVEST(I),0)</blank>
+
+                            <blank align="right" style="#,###">0</blank>
+                            <blank align="right" style="#,###">0</blank>
+
+                            <blank align="right" style="#,###">round(IT.NJ(I,2),0)</blank>
+                            <blank align="right" style="#,###">round(IT.EXTRA_DRAW(I),0)</blank>
+                            <blank align="right" style="#,###">round(IT.ACCOUNT_VALUE(I,2),0)</blank>
+                            <blank align="right" style="#,###">round(IT.CV(I,2),0)</blank>
+                            <blank align="right" style="#,###">round(IT.ACCOUNT_VALUE(I,2),0)</blank>
+                            <blank align="right" style="#,###">round(IT.QC(I,2),0)</blank>
+                        </row>
+                    </loop>
+                </table>
+            </benefit_table1>
+            <benefit_pdf filter="table" parser="table">
+                <loop from="0" to="INSURE_PERIOD-1" step="1" name="I">
+                    <row>
+                        <blank style="##0">I+1</blank>
+                        <blank style="##0">AGE+I</blank>
+
+                        <blank align="right" style="#,###" >round(IT.PRM(I),0)</blank>
+                        <blank align="right" style="#,###">round(IT.ADD_PRM(I),0)</blank>
+                        <blank align="right" style="#,###">round(IT.PRM_T(I))</blank>
+                        <blank align="right" style="#,###">round(IT.INIT_PAY(I),0)</blank>
+                        <blank align="right" style="#,###">round(IT.INVEST(I),0)</blank>
+
+                        <blank align="right" style="#,###">0</blank>
+                        <blank align="right" style="#,###">0</blank>
+
+                        <blank align="right" style="#,###">round(IT.NJ(I,0),0)</blank>
+                        <blank align="right" style="#,###">round(IT.NJ(I,1),0)</blank>
+                        <blank align="right" style="#,###">round(IT.NJ(I,2),0)</blank>
+
+                        <blank align="right" style="#,###">round(IT.EXTRA_DRAW(I),0)</blank>
+
+                        <blank align="right" style="#,###">round(IT.ACCOUNT_VALUE(I,0),0)</blank>
+                        <blank align="right" style="#,###">round(IT.ACCOUNT_VALUE(I,1),0)</blank>
+                        <blank align="right" style="#,###">round(IT.ACCOUNT_VALUE(I,2),0)</blank>
+
+                        <blank align="right" style="#,###">round(IT.CV(I,0),0)</blank>
+                        <blank align="right" style="#,###">round(IT.CV(I,1),0)</blank>
+                        <blank align="right" style="#,###">round(IT.CV(I,2),0)</blank>
+
+                        <blank align="right" style="#,###">round(IT.ACCOUNT_VALUE(I,0),0)</blank>
+                        <blank align="right" style="#,###">round(IT.ACCOUNT_VALUE(I,1),0)</blank>
+                        <blank align="right" style="#,###">round(IT.ACCOUNT_VALUE(I,2),0)</blank>
+
+                        <blank align="right" style="#,###">round(IT.QC(I,0),0)</blank>
+                        <blank align="right" style="#,###">round(IT.QC(I,1),0)</blank>
+                        <blank align="right" style="#,###">round(IT.QC(I,2),0)</blank>
+                    </row>
+                </loop>
+            </benefit_pdf>
+
+            <benefit_chart filter="chart" parser="chart">
+                <chart from="0" to="INSURE_PERIOD-1" name="I">
+                    <line name="个人账户价值" color="#459E82">round(IT.ACCOUNT_VALUE(I,0),0)</line>
+                    <bar name="部分领取金额" color="#FF0000">round(IT.EXTRA_DRAW(I),0)</bar>
+
+                </chart>
+
+                <chart from="0" to="INSURE_PERIOD-1" name="I">
+                    <line name="个人账户价值" color="#459E82">round(IT.ACCOUNT_VALUE(I,1),0)</line>
+                    <bar name="部分领取金额" color="#FF0000">round(IT.EXTRA_DRAW(I),0)</bar>
+
+                </chart>
+
+                <chart from="0" to="INSURE_PERIOD-1" name="I">
+                    <line name="个人账户价值" color="#459E82">round(IT.ACCOUNT_VALUE(I,2),0)</line>
+                    <bar name="部分领取金额" color="#FF0000">round(IT.EXTRA_DRAW(I),0)</bar>
+
+                </chart>
+            </benefit_chart>
+        </attachment>
+
+        <rule skip="">
+            <if condition="AGE lt 18 or AGE >65" type="customer">
+                投保年龄：被保险人年满18岁至65周岁。
+            </if>
+            <if condition="APPLICANT.AGE lt 18">
+                投保年龄：投保人年满18周岁。
+            </if>
+            <if condition="PREMIUM lt 50000 or PREMIUM%5000 > 0">
+                保费：最低保费5万元，须为5000元的整数倍。
+            </if>
+
+            <if condition="IT.ADD_PRM_RULE ==0">
+                每次追加保险费不得低于RMB5000元。
+            </if>
+            <!--<if condition="IT.ADD_DRAW_RULE_1 ==0">-->
+                <!--每个保单年度个人帐户价值的部分领取之总额以已交保险费的20%为限且每次提取账户价值不得低于RMB5000元。-->
+            <!--</if>-->
+            <!--<if condition="IT.ADD_DRAW_RULE_2==0">-->
+                <!--每次提取后剩余投资账户的总账户价值不得少于RMB5000 元。-->
+            <!--</if>-->
+
+        </rule>
+    </product>
+</declare>

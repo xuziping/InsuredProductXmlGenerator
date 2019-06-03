@@ -54,30 +54,124 @@ public class CheckXML extends ProductSupport{
         //获取一个产品，添加到计划
         Commodity main;
 
-        main = plan.newCommodity(hq.getProduct("SITC"));
+
 //        main.setAdditional("TOTAL_PREMIUM", 10000);
-        main.setAmount(1000000);
+
 //        main.setInput("occupation_level", "1");
-        main.setInput("pay_freq", "single");
+
 
 //        main.setInput("medicare", "no");
 //        main.setInput("insurance", "insurance_50000");
 //        main.setInput("assurance_program", "plan_five");
-        main.setInput("insure", "term_20");
-        main.setInput("pay", "term_1");
-//        main.setValue("loan_amount", 1000000);
-        main.setInput("loan_grace_period", "3");
-        main.setInput("loan_term", "term_20");
-        main.setInput("pay_method", "loan");
 
-        double[][] array = new double[3][];
-        array[0] = new double[]{1,12,0.018,0.018};
-        array[1] = new double[]{2,24,0.02,0.02};
-        array[2] = new double[]{25,240,0.023,0.023};
-        main.setValue("rate_info",array);
-        main.setValue("loan_amount", 1000000);
-        main.setValue("loan_term", 20);
-        main.setValue("loan_grace_period", 3);
+        /**
+         * 幸福世貸平準型
+         */
+//        main = plan.newCommodity(hq.getProduct("SITC_TCCB"));
+//        main.setAmount(1000000);
+//        main.setInput("pay_freq", "single");
+//        main.setInput("insure", "term_20");
+//        main.setInput("pay", "term_1");
+//        main.setInput("pay_method", "cash");
+//        double[][] array = new double[3][];
+//        array[0] = new double[]{1,12,0.018,0.018};
+//        array[1] = new double[]{13,24,0.02,0.02};
+//        array[2] = new double[]{25,240,0.023,0.023};
+//        main.setValue("rate_info",array);
+//        main.setValue("loan_amount", 1000000);
+//        main.setValue("loan_term", 20);
+//        main.setValue("loan_grace_period", 0);
+
+
+        /**
+         * 金赚100台幣年金
+         */
+        main = plan.newCommodity(hq.getProduct("UA0018_TCCB"));
+        main.setPremium(100000);
+        main.setInput("pay_freq", "single");
+        main.setInput("pay", "single");
+        main.setInput("birthday_payment_age", "80");
+        main.setValue("reward_rate_1", 0.06);
+        main.setValue("reward_rate_2", 0.02);
+        main.setValue("reward_rate_3", -0.06);
+        main.setValue("mf_rate", 0.5);
+        main.setValue("etf_rate", 0);
+        main.setValue("invest_rate", 0.5);
+        main.setValue("currency_rate", 0);
+
+        /**
+         * 尊享100台幣年金
+         */
+//        main = plan.newCommodity(hq.getProduct("UA0032_TCCB"));
+//        main.setPremium(100000);
+//        main.setInput("pay_freq", "single");
+//        main.setInput("pay", "single");
+//        main.setInput("birthday_payment_age", "80");
+//        main.setValue("reward_rate_1", 0.06);
+//        main.setValue("reward_rate_2", 0.02);
+//        main.setValue("reward_rate_3", -0.06);
+//        main.setValue("mf_rate", 0.5);
+//        main.setValue("etf_rate", 0);
+//        main.setValue("invest_rate", 0.5);
+//        main.setValue("currency_rate", 0);
+
+
+        /**
+         * 尊享100外幣年金
+         */
+//        main = plan.newCommodity(hq.getProduct("XA0032_TCCB"));
+//        main.setPremium(100000);
+//        main.setInput("pay_freq", "single");
+//        main.setInput("pay", "single");
+//        main.setInput("birthday_payment_age", "80");
+//        main.setValue("reward_rate_1", 0.06);
+//        main.setValue("reward_rate_2", 0.02);
+//        main.setValue("reward_rate_3", -0.06);
+//        main.setValue("mf_rate", 0.5);
+//        main.setValue("etf_rate", 0);
+//        main.setValue("invest_rate", 0.5);
+//        main.setValue("currency_rate", 0);
+//        main.setInput("currency", "NZD");
+
+
+
+        /**
+         * HF000006汇丰
+         */
+//        main = plan.newCommodity(hq.getProduct("HF000006"));
+//        main.setPremium(1000000);
+//        main.setInput("pay_freq", "single");
+//        main.setInput("insure", "term_5");
+//        main.setInput("pay", "term_1");
+//        main.setInput("pay_method", "cash");
+//        double[][] array = new double[3][];
+//        array[0] = new double[]{1,12,0.018,0.018};
+//        array[1] = new double[]{13,24,0.02,0.02};
+//        array[2] = new double[]{25,240,0.023,0.023};
+//        main.setValue("rate_info",array);
+//        main.setValue("loan_amount", 1000000);
+//        main.setValue("loan_term", 20);
+//        main.setValue("loan_grace_period", 3);
+//
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("addPremium",40000);
+//        jsonObject.put("addMethod","1");
+//        jsonObject.put("addStartAge",44);
+//        jsonObject.put("addEndAge",55);
+//        JSONArray jsonArray = new JSONArray();
+//        jsonArray.add(jsonObject);
+//        main.setValue("add_premium",jsonArray);
+//
+//        JSONObject jsonObject1 = new JSONObject();
+//        jsonObject1.put("addAmount",40000);
+//        jsonObject1.put("addMethod","1");
+//        jsonObject1.put("addStartAge",44);
+//        jsonObject1.put("addEndAge",55);
+//        JSONArray jsonArray1= new JSONArray();
+//        jsonArray1.add(jsonObject);
+//        main.setValue("add_draw",jsonArray1);
+
+
 //        main.setInput("birthday_payment_age", "75");
 //        main.setInput("get_annuity_age", "55");
 

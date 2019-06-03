@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <declare>
     <product
-            id="SITC"
+            id="SITC_TCCB"
             corporation_id="cardif"
             code="SITC"
-            name="幸福世貸定期壽險"
+            name="法商法國巴黎人壽幸福世貸定期壽險"
             name_abbr="幸福世貸定期壽險"
             unit="10000"
             type_code="life"
@@ -17,7 +17,7 @@
             last_modify_date="2017-01-01">
 
         <data>
-            <item parser="dds" value="SITC" />
+            <item parser="dds" value="SITC_TCCB" />
         </data>
 
         <param>
@@ -55,91 +55,89 @@
         </param>
 
         <input>
-            <item name="LOAN_AMOUNT" label="貸款金額（萬元）" widget="input" inputType="proposal"></item>
-            <item name="AMOUNT" label="保險金額（萬元）" widget="input" inputType="proposal"></item>
-            <item name="LOAN_TERM" label="貸款年期（年）" widget="input" inputType="proposal"></item>
-            <item name="INSURE" label="保險年期（年）" widget="select" inputType="proposal"></item>
-            <item name="LOAN_GRACE_PERIOD" label="貸款寬限期" widget="input" inputType="proposal"></item>
-            <item name="" label="繳費方式" widget="group" inputType="proposal">
-                <item name="PAY_FREQ" widget="select" inputType="proposal"></item>
-                <item name="PAY_METHOD" widget="select" inputType="proposal"></item>
-            </item>
-            <item name="PAY" label="繳費年期" widget="select" inputType="proposal"></item>
-            <item name="PREMIUM_LOAN_TERM" label="保費融資年期" widget="input" inputType="proposal"></item>
-
-            <!--<item name="CURRENCY" label="幣別" widget="select" inputType="apply"></item>-->
-            <!--<item name="PAY_FREQ" label="繳別" widget="select" inputType="apply"></item>-->
-            <!--<item name="PAY" label="繳費年期" widget="select" inputType="apply"></item>-->
-            <!--<item name="INSURE" label="保險年期" widget="select" inputType="apply"></item>-->
-            <!--<item name="" label="繳費方式" widget="group" inputType="apply">-->
-                <!--<item name="FIRST_METHOD" label="首期" widget="select" inputType="apply"></item>-->
-                <!--<item name="RENEW_METHOD" label="續期" widget="select" inputType="apply"></item>-->
-            <!--</item>-->
-            <!--<item name="AMOUNT" label="保額" widget="input" inputType="apply"></item>-->
-            <!--<item name="AUTO_PAY" label="自動墊繳" widget="radio" inputType="apply"></item>-->
+            <trial_vars code="proposal">
+                <item name="LOAN_AMOUNT" label="貸款金額（萬元）" widget="input" inputType="proposal" position="left"></item>
+                <item name="AMOUNT" label="保險金額（萬元）" widget="input" inputType="proposal" position="left"></item>
+                <item name="LOAN_TERM" label="貸款年期（年）" widget="input" inputType="proposal" position="left"></item>
+                <item name="INSURE" label="保險年期（年）" widget="select" inputType="proposal" position="left"></item>
+                <item name="LOAN_GRACE_PERIOD" label="貸款寬限期" widget="input" inputType="proposal" position="right"></item>
+                <item name="" label="繳費方式" widget="group" inputType="proposal" position="whole">
+                    <item name="PAY_FREQ" widget="select" inputType="proposal" ></item>
+                    <item name="PAY_METHOD" widget="select" inputType="proposal"></item>
+                </item>
+                <item name="PAY" label="繳費年期" widget="select" inputType="proposal" position="right"></item>
+                <item name="PREMIUM_LOAN_TERM" label="保費融資年期" widget="input" inputType="right" position="left"></item>
+            </trial_vars>
+            <trial_vars code="apply">
+                <item name="CURRENCY" label="幣別" widget="select" inputType="apply"></item>
+                <item name="PAY_FREQ" label="繳別" widget="select" inputType="apply"></item>
+                <item name="PAY" label="繳費年期" widget="select" inputType="apply"></item>
+                <item name="INSURE" label="保險年期" widget="select" inputType="apply"></item>
+                <item name="" label="繳費方式" widget="group" inputType="apply">
+                    <item name="FIRST_METHOD" label="首期" widget="select" inputType="apply"></item>
+                    <item name="RENEW_METHOD" label="續期" widget="select" inputType="apply"></item>
+                </item>
+                <item name="AMOUNT" label="保額" widget="input" inputType="apply"></item>
+                <item name="AUTO_PAY" label="自動墊繳" widget="radio" inputType="apply"></item>
+            </trial_vars>
         </input>
 
         <init>
+            <!--自定义一些业务逻辑处理的变量-->
+            <item name="proposal_layout" varType="customer" type="string">flow</item><!-- 建议书布局类型 -->
+            <item name="apply_layout" varType="customer" type="string">fixed</item><!-- 要保书布局类型 -->
+
             <item name="GENERIC_LOAN" value="1" /> <!-- 一般型房贷 -->
             <item name="ENSURING_LOAN" value="2" /> <!-- 保障型房贷 -->
             <item name="Q" value="AMOUNT/UNIT"/>
             <item name="PRM_FACTOR">
                 var f = 0;
                 if(PAY_FREQ_VALUE == 1 or PAY_FREQ_VALUE == 0){
-                  f = 1;
-                } else if(PAY_VALUE == 2) {
-                  f = 0.088;
-                } else if(PAY_VALUE == 3) {
-                  f = 0.262;
-                } else if(PAY_VALUE == 4) {
-                  f = 0.52;
+                f = 1;
+                } else if(PAY_FREQ_VALUE == 2) {
+                f = 0.088;
+                } else if(PAY_FREQ_VALUE == 3) {
+                f = 0.262;
+                } else if(PAY_FREQ_VALUE == 4) {
+                f = 0.52;
                 }
                 return f;
             </item>
             <item name="PREMIUM_VALUE">
                 var ret = 0;
                 if(PAY_VALUE == 1) {
-                    ret = Q*DS.RATE_SINGLE[0][INSURE_VALUE];
+                ret = Q*DS.RATE_SINGLE[0][INSURE_VALUE];
                 } else if(PAY_VALUE > 1){
-                  if(AMOUNT lt 8000000) {
-                    ret = try(Q*DS.RATE_YEAR[0][1],0);
-                  } else if(AMOUNT lt 15000000) {
-                    ret = try(Q*DS.RATE_YEAR[0][2],0);
-                  } else if(AMOUNT lt 30000000) {
-                    ret = try(Q*DS.RATE_YEAR[0][3],0);
-                  } else {
-                    ret = try(Q*DS.RATE_YEAR[0][4],0);
-                  }
+                if(AMOUNT lt 5000000) {
+                ret = try(Q*DS.RATE_YEAR[0][0],0);
+                } else if(AMOUNT lt 8000000) {
+                ret = try(Q*DS.RATE_YEAR[0][1],0);
+                } else if(AMOUNT lt 15000000) {
+                ret = try(Q*DS.RATE_YEAR[0][2],0);
+                } else if(AMOUNT lt 30000000) {
+                ret = try(Q*DS.RATE_YEAR[0][3],0);
+                } else {
+                ret = try(Q*DS.RATE_YEAR[0][4],0);
                 }
+                }
+                ret = PRM_FACTOR*ret;
                 return ret;
             </item>
             <!-- 贷款額 需要input传入-->
-            <!--<item name="LOAN_AMOUNT_VALUE">-->
-                <!--&lt;!&ndash;LOAN_AMOUNT_VALUE&ndash;&gt;-->
-                <!--1000000-->
-            <!--</item>-->
+            <item name="LOAN_AMOUNT_VALUE" value="INIT_LOAN_AMOUNT_VALUE!=null ? INIT_LOAN_AMOUNT_VALUE : 100000" />
             <!-- 贷款宽限期 需要input传入-->
-            <!--<item name="LOAN_GRACE_PERIOD_VALUE">-->
-                <!--&lt;!&ndash;LOAN_GRACE_PERIOD_VALUE&ndash;&gt;-->
-                <!--0-->
-            <!--</item>-->
-            <!-- 房贷利率数据 需要input传入-->
-            <!--<item name="RATE_INFO">-->
-                <!--&lt;!&ndash; 多维数组，每组四项，分别表示 起始月，结束月，一般放贷利率，保障型房贷利率 &ndash;&gt;-->
-                <!--&lt;!&ndash;[[1,12,0.018,0.018],[2,24,0.02,0.02],[25,240,0.023,0.023]]&ndash;&gt;-->
-            <!--</item>-->
+            <item name="LOAN_GRACE_PERIOD_VALUE"  value="INIT_LOAN_GRACE_PERIOD_VALUE!=null ? INIT_LOAN_GRACE_PERIOD_VALUE : 0"/>
             <!-- 贷款年期 需要input传入-->
-            <!--<item name="LOAN_TERM_VALUE">-->
-                <!--20-->
-            <!--</item>-->
+            <item name="LOAN_TERM_VALUE" value="INIT_LOAN_TERM_VALUE!=null ? INIT_LOAN_TERM_VALUE : 20"/>
+
             <!--<item name="PAY_METHOD_VALUE">-->
-                <!--loan-->
+            <!--loan-->
             <!--</item>-->
             <!-- 保險金額，躉交+貸款 包含保費+房貸；否則 僅房貸 -->
             <item name="LOAN_AMOUNT_T">
                 var ret = LOAN_AMOUNT_VALUE;
                 if(PAY_FREQ_VALUE == '1' and PAY_METHOD_VALUE == '2') {
-                   ret = ret + PREMIUM_VALUE;
+                ret = ret + PREMIUM_VALUE;
                 }
                 return ret;
             </item>
@@ -152,16 +150,16 @@
             <var name="LOAN_RATE" param="A1,A2" >
                 var ret = 0;
                 if(RATE_INFO_VALUE != null) {
-                  for (var x = 0; x lt size(RATE_INFO_VALUE); x++) {
-                    var p = RATE_INFO_VALUE[x];
-                    if(A1 != null and A1 ge p[0] and A1 le p[1]){
-                        if(A2==GENERIC_LOAN){
-                            ret = p[2];
-                        } else if (A2==ENSURING_LOAN){
-                            ret = p[3];
-                        }
-                    }
-                  }
+                for (var x = 0; x lt size(RATE_INFO_VALUE); x++) {
+                var p = RATE_INFO_VALUE[x];
+                if(A1 != null and A1 ge p[0] and A1 le p[1]){
+                if(A2==GENERIC_LOAN){
+                ret = p[2];
+                } else if (A2==ENSURING_LOAN){
+                ret = p[3];
+                }
+                }
+                }
                 }
                 return ret;
             </var>
@@ -169,21 +167,22 @@
             <var name="PAY_RATE_MONTH" param="A1,A2">
                 var ret = 0;
                 if (A1 != null and A1 gt LOAN_GRACE_PERIOD_VALUE*12) {
-                    var rate = IT.LOAN_RATE(A1,A2);
-                    var monthRate = rate/12;
-                    var amountValue = A2 == ENSURING_LOAN ? LOAN_AMOUNT_T : LOAN_AMOUNT_VALUE;
-                    var divPart = 1 - pow(1 + monthRate, (-12)* LOAN_TERM_VALUE);
-                    ret = amountValue * monthRate / divPart;
+                var rate = IT.LOAN_RATE(A1,A2);
+                var monthRate = rate/12;
+                var amountValue = A2 == ENSURING_LOAN ? LOAN_AMOUNT_T : LOAN_AMOUNT_VALUE;
+                var divPart = 1 - pow(1 + monthRate, (-12)* LOAN_TERM_VALUE);
+                ret = amountValue * monthRate / divPart;
                 }
                 return ret;
             </var>
             <var name="PAY_RATE_T" param="A1,A2" formula="(A1>0?IT.PAY_RATE_T(A1-1,A2):0)+IT.PAY_RATE_MONTH(A1,A2)"/>
             <!-- 贷款余额 -->
             <var name="LEFT_LOAN" param="A1,A2">
+                print('A1='+A1+',A2='+A2);
                 var amountValue = A2 == ENSURING_LOAN ? LOAN_AMOUNT_T : LOAN_AMOUNT_VALUE;
                 var ret = amountValue - IT.PAY_RATE_T(A1,A2);
                 if (ret lt 0) {
-                  ret = 0;
+                ret = 0;
                 }
                 return ret;
             </var>
@@ -195,29 +194,8 @@
         <attachment>
             <benefit_table filter="table" parser="table">
 
-                <!--<table desc="測試">-->
-                    <!--<row type="title">-->
-                        <!--<blank row="1">'保單月'</blank>-->
-                        <!--<blank row="1">'一般房貸(A)利率'</blank>-->
-                        <!--&lt;!&ndash;<blank row="1">'一般房貸(A)月付金額'</blank>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<blank row="1">'保障型房貸(B)利率'</blank>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<blank row="1">'保障型房貸(B)月付金額'</blank>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<blank row="1">'月付金額差額(B-A)'</blank>&ndash;&gt;-->
-                    <!--</row>-->
-                    <!--<loop from="0" to="size(RATE_INFO)-1" step="1" name="I">-->
-                        <!--<row>-->
-                            <!--<blank>'第'+ round(RATE_INFO[I][0],0) + '-第' + round(RATE_INFO[I][1],0) + '月'</blank>-->
-                            <!--<blank align="right" style="########0">IT.PAY_RATE_MONTH(RATE_INFO[I][0],GENERIC_LOAN)</blank>-->
-                            <!--&lt;!&ndash;<blank align="right" style="########0">IT.PAY_RATE_MONTH(RATE_INFO[I][0],'GENERIC')</blank>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<blank align="right" style="########0.00">round(RATE_INFO[I][3]*100,2)+'%'</blank>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<blank align="right" style="########0">IT.PAY_RATE_MONTH(RATE_INFO[I][0],'ENSURING')</blank>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<blank align="right" style="########0">IT.LOAN_D_VALUE(I)</blank>&ndash;&gt;-->
-                        <!--</row>-->
-                    <!--</loop>-->
-                <!--</table>-->
-
-
-                <table desc="月付金比較表">
+                <!--  房貸比較表 1 -->
+                <table desc="月付金比較表"  code="fdbjb1">
                     <row type="title">
                         <blank row="1">'保單月'</blank>
                         <blank row="1">'一般房貸(A)利率'</blank>
@@ -238,7 +216,8 @@
                     </loop>
                 </table>
 
-                <table desc="還款試算表">
+                <!--  房貸比較表 2 -->
+                <table desc="還款試算表"  code="fdbjb2">
                     <row type="title">
                         <blank row="1">'總期數（月）'</blank>
                         <blank row="1">'一般房貸(A)利率'</blank>
@@ -263,7 +242,8 @@
                     </loop>
                 </table>
 
-                <table desc="保額暨解約金">
+                <!-- 保額暨解約金 -->
+                <table desc="保額暨解約金"  code="bejyj">
                     <row type="title">
                         <blank row="1">'保單年度'</blank>
                         <blank row="1">'保險金額'</blank>
@@ -277,16 +257,15 @@
                             <blank align="right" style="########0.00">round(LOAN_AMOUNT_T,0)</blank>
                             <blank align="right" style="########0">round(IT.LEFT_LOAN((I+1)*12,GENERIC_LOAN),0)</blank>
                             <blank align="right" style="########0.00">round(IT.PAY_RATE_T((I+1)*12,GENERIC_LOAN),0)</blank>
-                            <blank align="right" style="########0"></blank>
+                            <blank align="right" style="########0">'5000'</blank>
                         </row>
                     </loop>
                 </table>
-
             </benefit_table>
 
-
+            <!-- 保障內容 -->
             <liability filter="liability" parser="liability">
-                <paragraph title="保障金額">
+                <paragraph title="保障金額" type="1">
                     <table>
                         <row type="title">
                             <blank>'給付項目'</blank>
@@ -377,6 +356,8 @@
                             <blank>round(LOAN_AMOUNT_T*0.4,0)+'萬'</blank>
                         </row>
                     </table>
+                </paragraph>
+                <paragraph title="保障給付說明" type="2">
                     <item>保障給付說明</item>
                     <item>1.身故保險金:按保險金額給付「身故保險金」。</item>
                     <item>2.完全失能保險金:按保險金額給付「完全失能保險金」。</item>
@@ -392,38 +373,58 @@
             </liability>
 
             <!-- 注意事項 -->
-            <notices filter="table" parser="table">
-                <table>
-                    <row>
-                        <blank>'1.本保險商品於訂立契約前應提供要保人保單條款樣本且不低於三日審閱期間之權利。'</blank>
-                        <blank>'2.消費者於購買本保險商品前，應詳閱各種銷售文件內容，本保險商品之預定費用率(預定附加費用率)最高81.6%，最低36.3%；如要詳細了解其他相關資訊，請查閱法國巴黎人壽網址https://life.cardif.com.tw/，或洽免付費服務專線0800-012-899，以保障您的權益。'</blank>
-                        <blank>'3.本保險商品經法國巴黎人壽合格簽署人員檢視其內容業已符合一般精算原則及保險法令，惟為確保權益，基於保險公司與消費者衡平對等原則，消費者仍應詳加閱讀保險單條款與相關文件，審慎選擇保險商品。本保險商品如有虛偽不實或違法情事，應由法國巴黎人壽及其負責人依法負責。'</blank>
-                        <blank>'4.投保後解約或不繼續繳費可能不利消費者，請慎選符合需求之保險商品。'</blank>
-                        <blank>'5.投保後解約時，將無法領回全部保險費，解約金之詳細說明，請詳細參閱保單條款。'</blank>
-                        <blank>'6.本建議書僅供參考，保險契約各項權利義務皆詳列於保單條款，消費者務必詳加閱讀了解，並把握保單契約撤銷之時效(收到保單翌日起算十日內)。'</blank>
-                        <blank>'7.本保險商品為不分紅保單，不參加紅利分配，並無紅利給付項目。'</blank>
-                        <blank>'8.本保險商品依保險法及相關規定受「人身保險安定基金」保障。'</blank>
-                        <blank>'9.本保險商品非存款商品，無受「存款保險」保障。'</blank>
-                        <blank>'10.人壽保險之死亡給付及年金保險之確定年金給付於被保險人死亡後給付於指定受益人者，依保險法第一百十二條規定不得作為被保險人之遺產，惟如涉有規避遺產稅等稅捐情事者，稽徵機關仍得依據有關稅法規定或稅捐稽徵法第十二條之一所定實質課稅原則辦理。相關實務案例請至法國巴黎人壽官網https://life.cardif.com.tw/查閱。'</blank>
-                        <blank>'11.本商品由法國巴黎人壽發行並負擔基於保險契約所生之權利義務，並由保險代理人/保險經紀人或合作銀行代理銷售，合作銀行代收/代轉保險費及保險文件。惟承保與否及保險給付之責任由法國巴黎人壽負責。保險代理人/保險經紀人或合作銀行與法國巴黎人壽並無合夥、委任或僱傭等任何關係。'</blank>
-                        <blank>'12.本建議書關於保險商品之資訊由法國巴黎人壽提供，關於貸款之相關資訊由合作銀行提供，惟合作銀行保留本專案貸款准駁之權利。'</blank>
-                        <blank>'13.本商品之紛爭處理及申訴管道：法國巴黎人壽免費申訴電話：0800-012-899、傳真電話：02-6636-3457、電子信箱(email)：group_assurance_tw_parislife@tw.cardif.com。'</blank>
-                        <blank>'14.稅法相關規定或解釋之改變與實質課稅原則認定，可能會影響本商品之給付金額及稅賦。'</blank>
-                        <blank>'15.本商品由代理銷售之保險代理人/保險經紀人或合作銀行以合作銀行為本保險商品之行銷通路。各辦理單位備有法國巴黎人壽之保單條款，要保人須仔細閱讀，商品詳細內容以保單條款為準。'</blank>
-                        <blank>'16.要保人投保時，招攬人員應主動出示其具備主管機關規定銷售資格之證件，並告知其授權範圍及詳細解說保險商品之內容；招攬人員如未主動出示告知，要保人應要求其出示並詳細告知。'</blank>
-                        <blank>'17.法國巴黎人壽資訊公開說明文件，請查閱法國巴黎人壽網址https://life.cardif.com.tw/，或洽免付費服務專線0800-012-899。'</blank>
-                        <blank>'18.本建議書內容係根據客戶需求作成之保險規劃建議，但不構成要約、要約之引誘或締結契約或交易之確認或承諾，且本公司保有最後承保與否之權利。'</blank>
-                    </row>
-                </table>
-            </notices>
+            <!--<notices filter="notices" parser="notices">-->
+                <!--<paragraph title="注意事項">-->
+                    <!--<table>-->
+                        <!--<row>-->
+                            <!--<blank>'1.本保險商品於訂立契約前應提供要保人保單條款樣本且不低於三日審閱期間之權利。'</blank>-->
+                            <!--<blank>'2.消費者於購買本保險商品前，應詳閱各種銷售文件內容，本保險商品之預定費用率(預定附加費用率)最高81.6%，最低36.3%；如要詳細了解其他相關資訊，請查閱法國巴黎人壽網址https://life.cardif.com.tw/，或洽免付費服務專線0800-012-899，以保障您的權益。'</blank>-->
+                            <!--<blank>'3.本保險商品經法國巴黎人壽合格簽署人員檢視其內容業已符合一般精算原則及保險法令，惟為確保權益，基於保險公司與消費者衡平對等原則，消費者仍應詳加閱讀保險單條款與相關文件，審慎選擇保險商品。本保險商品如有虛偽不實或違法情事，應由法國巴黎人壽及其負責人依法負責。'</blank>-->
+                            <!--<blank>'4.投保後解約或不繼續繳費可能不利消費者，請慎選符合需求之保險商品。'</blank>-->
+                            <!--<blank>'5.投保後解約時，將無法領回全部保險費，解約金之詳細說明，請詳細參閱保單條款。'</blank>-->
+                            <!--<blank>'6.本建議書僅供參考，保險契約各項權利義務皆詳列於保單條款，消費者務必詳加閱讀了解，並把握保單契約撤銷之時效(收到保單翌日起算十日內)。'</blank>-->
+                            <!--<blank>'7.本保險商品為不分紅保單，不參加紅利分配，並無紅利給付項目。'</blank>-->
+                            <!--<blank>'8.本保險商品依保險法及相關規定受「人身保險安定基金」保障。'</blank>-->
+                            <!--<blank>'9.本保險商品非存款商品，無受「存款保險」保障。'</blank>-->
+                            <!--<blank>'10.人壽保險之死亡給付及年金保險之確定年金給付於被保險人死亡後給付於指定受益人者，依保險法第一百十二條規定不得作為被保險人之遺產，惟如涉有規避遺產稅等稅捐情事者，稽徵機關仍得依據有關稅法規定或稅捐稽徵法第十二條之一所定實質課稅原則辦理。相關實務案例請至法國巴黎人壽官網https://life.cardif.com.tw/查閱。'</blank>-->
+                            <!--<blank>'11.本商品由法國巴黎人壽發行並負擔基於保險契約所生之權利義務，並由保險代理人/保險經紀人或合作銀行代理銷售，合作銀行代收/代轉保險費及保險文件。惟承保與否及保險給付之責任由法國巴黎人壽負責。保險代理人/保險經紀人或合作銀行與法國巴黎人壽並無合夥、委任或僱傭等任何關係。'</blank>-->
+                            <!--<blank>'12.本建議書關於保險商品之資訊由法國巴黎人壽提供，關於貸款之相關資訊由合作銀行提供，惟合作銀行保留本專案貸款准駁之權利。'</blank>-->
+                            <!--<blank>'13.本商品之紛爭處理及申訴管道：法國巴黎人壽免費申訴電話：0800-012-899、傳真電話：02-6636-3457、電子信箱(email)：group_assurance_tw_parislife@tw.cardif.com。'</blank>-->
+                            <!--<blank>'14.稅法相關規定或解釋之改變與實質課稅原則認定，可能會影響本商品之給付金額及稅賦。'</blank>-->
+                            <!--<blank>'15.本商品由代理銷售之保險代理人/保險經紀人或合作銀行以合作銀行為本保險商品之行銷通路。各辦理單位備有法國巴黎人壽之保單條款，要保人須仔細閱讀，商品詳細內容以保單條款為準。'</blank>-->
+                            <!--<blank>'16.要保人投保時，招攬人員應主動出示其具備主管機關規定銷售資格之證件，並告知其授權範圍及詳細解說保險商品之內容；招攬人員如未主動出示告知，要保人應要求其出示並詳細告知。'</blank>-->
+                            <!--<blank>'17.法國巴黎人壽資訊公開說明文件，請查閱法國巴黎人壽網址https://life.cardif.com.tw/，或洽免付費服務專線0800-012-899。'</blank>-->
+                            <!--<blank>'18.本建議書內容係根據客戶需求作成之保險規劃建議，但不構成要約、要約之引誘或締結契約或交易之確認或承諾，且本公司保有最後承保與否之權利。'</blank>-->
+                        <!--</row>-->
+                    <!--</table>-->
+                <!--</paragraph>-->
+            <!--</notices>-->
 
 
         </attachment>
 
         <rule skip="">
-            <!--<if condition="AGE ge 61 and AGE le 70 and " type="customer">-->
-            <!--投保年龄：被保险人出生满28天至65周岁。-->
-            <!--</if>-->
+            <if condition="AGE gt 65 or AGE lt 20" type="customer">
+                承保年齡：20-65周歲。
+            </if>
+            <if condition="LOAN_TERM_VALUE gt 30 or LOAN_TERM_VALUE lt 2" type="customer">
+                貸款年期：2-30年。
+            </if>
+            <if condition="AMOUNT gt 60000000" type="customer">
+                保險金額不得高於上限6000萬元。
+            </if>
+            <if condition="AMOUNT lt 1000000" type="customer">
+                保險金額不得低於下限100萬元。
+            </if>
+            <if condition="LOAN_AMOUNT_VALUE gt 60000000" type="customer">
+                貸款金額不得高於上限6000萬元。
+            </if>
+            <if condition="LOAN_AMOUNT_VALUE lt 1000000" type="customer">
+                貸款金額不得低於下限100萬元。
+            </if>
+            <if condition="AMOUNT gt LOAN_AMOUNT_VALUE*1.25" type="customer">
+                保險金額不得大於貸款金額的1.25倍。
+            </if>
         </rule>
     </product>
 </declare>

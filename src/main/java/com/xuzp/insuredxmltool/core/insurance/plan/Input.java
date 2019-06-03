@@ -44,7 +44,13 @@ public class Input implements Serializable, Factors
 	
 	public int getValue()
 	{
-		return Value.intOf(option.getValue(), factors);
+		try {
+			return Value.intOf(option.getValue(), factors);
+		}catch(Exception e) {
+			e.printStackTrace();
+			System.out.println("value="+option.getValue());
+			throw e;
+		}
 	}
 	
 	public int getMode()

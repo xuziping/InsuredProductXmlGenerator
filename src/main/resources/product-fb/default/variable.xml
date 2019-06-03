@@ -63,11 +63,24 @@
 		<item name="MEDICARE_CODE" formula="medicare.CODE"/>
 		<item name="MEDICARE_VALUE" formula="medicare.VALUE"/>
 
-		<item name="LOAN_AMOUNT_VALUE" formula="loan_amount" />
-		<item name="LOAN_TERM_VALUE" formula="loan_term" />
-		<item name="LOAN_GRACE_PERIOD_VALUE" formula="loan_grace_period"/>
+		<item name="INIT_LOAN_AMOUNT_VALUE" formula="loan_amount" />
+		<item name="INIT_LOAN_TERM_VALUE" formula="loan_term" />
+		<item name="INIT_LOAN_GRACE_PERIOD_VALUE" formula="loan_grace_period"/>
+
 		<item name="PAY_METHOD_VALUE" formula="pay_method.VALUE" />
 		<item name="CURRENCY_VALUE" formula="currency.VALUE" />
+		<item name="CURRENCY_CODE" formula="currency.CODE" />
 		<item name="RATE_INFO_VALUE" formula="rate_info" />
+
+		<item name="REWARD_RATE_1_VALUE" formula="reward_rate_1" />
+		<item name="REWARD_RATE_2_VALUE" formula="reward_rate_2" />
+		<item name="REWARD_RATE_3_VALUE" formula="reward_rate_3" />
+
+		<item name="MF_RATE_VALUE" formula="mf_rate" />
+		<item name="ETF_RATE_VALUE" formula="etf_rate" />
+		<item name="INVEST_RATE_VALUE" formula="invest_rate" />
+		<item name="CURRENCY_RATE_VALUE" formula="currency_rate" />
+
+		<item name="INIT_BIRTHDAY_PAYMENT_AGE_VALUE" formula="birthday_payment_age" />
 	</variable>
 </declare>

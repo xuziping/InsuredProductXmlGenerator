@@ -128,17 +128,29 @@
 			<item code="term_30" value="30" show="30年期" />
 		</annuity_reward_period>
 		<annuity_reward_freq>
-			<item code="year" value="1" show="年交" />
-			<item code="month" value="2" show="月交" />
+			<item code="year" value="1" show="年付" />
+			<item code="month" value="2" show="月付" />
 		</annuity_reward_freq>
 		<currency>
-			<item code="TB" value="TB" show="台幣" />
-			<item code="RMB" value="RMB" show="人民幣" />
+			<item code="NTD" value="1" show="台幣" />
+			<item code="USD" value="2" show="美元" />
+			<item code="AUD" value="3" show="澳幣" />
+			<item code="CAD" value="4" show="加幣" />
+			<item code="HKD" value="5" show="港幣" />
+			<item code="EUR" value="6" show="歐元" />
+			<item code="GBP" value="7" show="英鎊" />
+			<item code="JPY" value="8" show="日圓" />
+			<item code="NZD" value="9" show="紐幣" />
 		</currency>
 		<pay_method>
 			<item code="cash" value="1" show="現金" />
 			<item code="loan" value="2" show="貸款" />
 		</pay_method>
+		<pay_way>
+			<item code="remit" value="1" show="匯款" />
+			<item code="autopay" value="1" show="自動轉賬" />
+			<item code="credit" value="1" show="信用卡" />
+		</pay_way>
 		<loan_term>
 			<item code="term_1" value="1" show="1年期" />
 			<item code="term_5" value="5" show="5年期" />
@@ -148,7 +160,6 @@
 			<item code="term_25" value="25" show="25年期" />
 			<item code="term_30" value="30" show="30年期" />
 		</loan_term>
-
 
 	</parameter>
 </declare>

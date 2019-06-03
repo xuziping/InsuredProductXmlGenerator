@@ -83,9 +83,15 @@ public class VariableArray implements Function, Serializable
 					p.declare(param[i]); //必须要声明一下，不然数组嵌套的时候会把上一级的数组的同名值（通常是A1,A2）给改了
 					p.set(param[i], v[i]);
 				}
-				
-				r = f.run(p);
-				temp.put(key, r);
+				try {
+					r = f.run(p);
+					temp.put(key, r);
+				}catch(Exception e) {
+					e.printStackTrace();
+					System.out.println("key=" + key);
+					throw e;
+				}
+
 			}
 			
 			return r;
